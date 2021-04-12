@@ -1,3 +1,10 @@
+## User settings
+xcuserdata/
+
+## Cocoapods
+Pods/
+Podfile.lock
+
 ## Carthage
 Carthage/
 
