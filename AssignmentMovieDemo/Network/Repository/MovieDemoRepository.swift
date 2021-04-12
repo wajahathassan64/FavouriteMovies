@@ -1,0 +1,21 @@
+//
+//  Repository.swift
+//  AssignmentMovieDemo
+//
+//  Created by Wajahat Hassan on 11/04/2021.
+//
+
+import Foundation
+import RxSwift
+
+protocol MovieDemoRepositoryType {
+    func getMovies(pageNumber: Int) -> Observable<Event<Movies?>>
+}
+
+class MovieDemoRepository: ServiceInstance, MovieDemoRepositoryType {
+    
+    func getMovies(pageNumber: Int) -> Observable<Event<Movies?>> {
+        return moviewDemoService.getMovies(pageNumber: pageNumber).materialize()
+    }
+    
+}
