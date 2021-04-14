@@ -71,7 +71,7 @@ class MovieTableViewCellViewModelViewModel: ReusableTableViewCellViewModelType, 
 extension MovieTableViewCellViewModelViewModel {
     var posterImageUrl: String? {
         guard let path = movieResult.posterPath else { return nil}
-        return "https://image.tmdb.org/t/p/w500" + path
+        return "https://image.tmdb.org/t/p/w342" + path
     }
     
     var posterImageWithUrl: ImageWithURL {
