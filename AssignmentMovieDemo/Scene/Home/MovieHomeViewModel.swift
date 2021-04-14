@@ -11,9 +11,13 @@ import RxDataSources
 
 protocol MovieHomeViewModelInputs {
     var loadNextPageObserver: AnyObserver<Void> { get }
+    var actionFavouriteMoviesObserver: AnyObserver<Void>{ get }
+    var actionSearchMoviesObserver: AnyObserver<Void>{ get }
 }
 
 protocol MovieHomeViewModelOutputs {
+    var actionFavouriteMovies: Observable<Void>{ get }
+    var actionSearchMovies: Observable<Void>{ get }
     var movies: Observable<[MovieResults]?>{ get }
     var dataSource: Observable<[SectionModel<Int, ReusableCollectionViewCellViewModelType>]> { get }
 }
@@ -35,13 +39,19 @@ class MovieHomeViewModel: MovieHomeViewModelType, MovieHomeViewModelInputs, Movi
     
     //MARK: - Subjects
     private let loadNextPageSubject = PublishSubject<Void>()
+    private let actionSearchMoviesSubject = PublishSubject<Void>()
+    private let actionFavouriteMoviesSubject = PublishSubject<Void>()
     private let moviesSubject = BehaviorSubject<[MovieResults]?>(value: nil)
     private let dataSourceSubject = BehaviorSubject<[SectionModel<Int, ReusableCollectionViewCellViewModelType>]>(value: [])
     
     //MARK: - Inputs
     var loadNextPageObserver: AnyObserver<Void>{ loadNextPageSubject.asObserver() }
+    var actionFavouriteMoviesObserver: AnyObserver<Void>{ actionFavouriteMoviesSubject.asObserver() }
+    var actionSearchMoviesObserver: AnyObserver<Void>{ actionSearchMoviesSubject.asObserver() }
     
     //MARK: - Outputs
+    var actionFavouriteMovies: Observable<Void>{ actionFavouriteMoviesSubject.asObservable() }
+    var actionSearchMovies: Observable<Void>{ actionSearchMoviesSubject.asObservable() }
     var movies: Observable<[MovieResults]?>{ moviesSubject.asObservable() }
     var dataSource: Observable<[SectionModel<Int, ReusableCollectionViewCellViewModelType>]> { return dataSourceSubject.asObservable() }
     
@@ -51,14 +61,15 @@ class MovieHomeViewModel: MovieHomeViewModelType, MovieHomeViewModelInputs, Movi
         self.movieDataProvider = movieDataProvider
         makeCellViewModels()
         fetchMovies()
+        refreshCellViewModels()
     }
     
 }
 
-extension MovieHomeViewModel {
+private extension MovieHomeViewModel {
     
     func makeCellViewModels() {
-        let cellViewModels = moviesSubject.delay(.milliseconds(500), scheduler: MainScheduler.asyncInstance).unwrap().map{ [unowned self] moviesList -> [ReusableCollectionViewCellViewModelType] in
+        let cellViewModels = moviesSubject.unwrap().delay(.nanoseconds(1), scheduler: MainScheduler.asyncInstance).map{ [unowned self] moviesList -> [ReusableCollectionViewCellViewModelType] in
             let viewModels = moviesList.map { [unowned self] movieList -> ReusableCollectionViewCellViewModelType in
                 let viewModel = MovieCollectionViewCellViewModel(movieResult: movieList)
                 
@@ -67,7 +78,7 @@ extension MovieHomeViewModel {
                 }).disposed(by: disposeBag)
                 
                 if let movies = storeDataManager.fetchFavouriteMovie() {
-                   let isFavourite = movies.filter{ $0.id == viewModel.movieResult.id }.first.map{ _ in true  }
+                    let isFavourite = movies.filter{ $0.id == viewModel.movieResult.id }.first.map{ _ in true  }
                     viewModel.inputs.isFavouriteIconObserver.onNext(isFavourite ?? false)
                 }
                 
@@ -84,14 +95,19 @@ extension MovieHomeViewModel {
     }
     
     func fetchMovies() {
-        
         self.movieDataProvider.movies.subscribe(onNext: {[weak self] movies in
             self?.moviesSubject.onNext(movies)
         }).disposed(by: disposeBag)
-
+        
         loadNextPageSubject.subscribe(onNext: {[unowned self] _ in
             guard !self.movieDataProvider.isLastPage() else { return }
             self.movieDataProvider.fetchSubject.onNext(())
+        }).disposed(by: disposeBag)
+    }
+    
+    func refreshCellViewModels() {
+        self.storeDataManager.successSubject.subscribe(onNext: {[weak self] _ in
+            self?.makeCellViewModels()
         }).disposed(by: disposeBag)
     }
 }

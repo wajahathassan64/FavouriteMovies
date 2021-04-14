@@ -19,12 +19,14 @@ public class WebClient {
                     data, response, error in
                     error.map { observer.onError($0) }
                     do {
-//                                                data.map { String(data: $0, encoding: .utf8 ).map { print("Response for : \(urlRequest.url?.absoluteString ?? "")" + "\n" + $0) } }
+//                        data.map { String(data: $0, encoding: .utf8 ).map { print("Response for : \(urlRequest.url?.absoluteString ?? "")" + "\n" + $0) } }
                         try data.map { validData in
                             let decodedObject: T = try JSONParser.decode(value: validData)
+                            
                             observer.onNext(decodedObject)
                         }
                     } catch {
+                        
                         observer.onError(error)
                     }
                 }

@@ -6,10 +6,18 @@
 //
 
 import Foundation
+import RxSwift
 
-class FavouriteMoviesDataManager {
+protocol FavouriteMoviesDataManagerType: class {
+    func storeFavouriteMovie(movie: MovieResults)
+    func fetchFavouriteMovie() -> [MovieResults]?
+    var successSubject: PublishSubject<Void>{ get }
+}
+
+class FavouriteMoviesDataManager: FavouriteMoviesDataManagerType {
     
     //MARK: - Properties
+    var successSubject: PublishSubject<Void> = PublishSubject<Void>()
     let storage: PersistentStoreHelperType
     
     init(storage: PersistentStoreHelperType) {
@@ -18,26 +26,31 @@ class FavouriteMoviesDataManager {
     
     func storeFavouriteMovie(movie: MovieResults) {
         var loadFavouriteMovie: [MovieResults] = []
-        if let data = fetchFavouriteMovie() {
+        
+        if var data = fetchFavouriteMovie(), data.count > 0 {
+            if let index = data.firstIndex(of: movie) {
+                data.remove(at: index)
+                removeFavouriteMovie()
+                loadFavouriteMovie = data
+                save(data: loadFavouriteMovie)
+                return
+            }
             loadFavouriteMovie = data
             loadFavouriteMovie.append(movie)
         }else{
             loadFavouriteMovie.append(movie)
         }
-        if let encode = try? JSONParser.encode(value: loadFavouriteMovie) {
+        save(data: loadFavouriteMovie)
+    }
+    
+    private func save(data: [MovieResults]) {
+        if let encode = try? JSONParser.encode(value: data) {
             self.storage.setData(value: encode, key: Keys.favouriteMovie.localize)
+            successSubject.onNext(())
         }
     }
     
     func fetchFavouriteMovie() -> [MovieResults]? {
-        //
-        //        if let savedPerson = UserDefaults.standard.object(forKey: "SavedPerson") as? Data {
-        //            let decoder = JSONDecoder()
-        //            if let loadedPerson = try? decoder.decode([MovieResults].self, from: savedPerson) {
-        //                print(loadedPerson.first?.title)
-        //            }
-        //        }
-        
         if let data = self.storage.getData(type: Data.self, forkey:  Keys.favouriteMovie.localize) {
             if let loadedData = try? JSONParser.decode(value: data) as [MovieResults] {
                 return loadedData
@@ -46,4 +59,7 @@ class FavouriteMoviesDataManager {
         return nil
     }
     
+    private func removeFavouriteMovie() {
+        storage.removeData(key: Keys.favouriteMovie.localize)
+    }
 }

@@ -1,17 +1,17 @@
 //
-//  MovieCollectionViewCell.swift
+//  MovieTableViewCell.swift
 //  AssignmentMovieDemo
 //
-//  Created by Wajahat Hassan on 11/04/2021.
+//  Created by Wajahat Hassan on 13/04/2021.
 //
 
+import Foundation
 import RxSwift
 import RxCocoa
-import WHCustomizeConstraint
 
-class MovieCollectionViewCell: RxUICollectionViewCell {
+class MovieTableViewCell: RxUITableViewCell {
     
-    private var viewModel: MovieCollectionViewCellViewModelType!
+    private var viewModel: MovieTableViewCellViewModelType!
     
     private lazy var containerView: UIView = {
         let view = UIView()
@@ -30,6 +30,17 @@ class MovieCollectionViewCell: RxUICollectionViewCell {
     }()
     
     private lazy var movieName: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        label.textColor = .white
+        label.lineBreakMode = .byCharWrapping
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private lazy var releaseDate: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         label.textColor = .white
@@ -51,11 +62,9 @@ class MovieCollectionViewCell: RxUICollectionViewCell {
     }()
     
     // MARK: Initialization
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        clipsToBounds = true
-        backgroundColor = .clear
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        selectionStyle = .none
         setupViews()
         setupConstraints()
         addActionOnFavouriteIcon()
@@ -65,17 +74,24 @@ class MovieCollectionViewCell: RxUICollectionViewCell {
         super.init(coder: aDecoder)
     }
     
+    private lazy var separator: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.init(red: 151.0/255.0, green: 151.0/255.0, blue: 151.0/255.0, alpha: 0.11)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     // MARK: Configuration
     override func configure(with viewModel: Any) {
-        guard let viewModel = viewModel as? MovieCollectionViewCellViewModelType else { return }
+        guard let viewModel = viewModel as? MovieTableViewCellViewModelType else { return }
         self.viewModel = viewModel
-        bind(viewModel: viewModel)
+        bind()
     }
-    
     
     override func layoutSubviews() {
         super.layoutSubviews()
         containerView.layer.cornerRadius = 4
+        posterImageView.layer.cornerRadius = 4
     }
     
     func addActionOnFavouriteIcon() {
@@ -86,8 +102,6 @@ class MovieCollectionViewCell: RxUICollectionViewCell {
     
     @objc
     func favouriteIconTap(tapGestureRecognizer: UITapGestureRecognizer) {
-        // Your action
-        print("favouriteIconTap")
         favouriteIcon.tintColor = .systemPink
         viewModel.inputs.favouriteIconTapObserver.onNext(())
     }
@@ -95,43 +109,52 @@ class MovieCollectionViewCell: RxUICollectionViewCell {
 }
 
 // MARK: SetupViews
-private extension MovieCollectionViewCell {
+private extension MovieTableViewCell {
     func setupViews() {
-        contentView.backgroundColor = .clear
+        contentView.backgroundColor = .black
         containerView.addSubview(posterImageView)
         containerView.addSubview(movieName)
+        containerView.addSubview(releaseDate)
         containerView.addSubview(favouriteIcon)
         contentView.addSubview(containerView)
     }
     
     func setupConstraints() {
         
+        containerView
+            .alignEdgesWithSuperview([.left, .right, .top, .bottom], constants: [10,10, 0, 10])
+        
         posterImageView
-            .alignEdgesWithSuperview([.left, .right, .top])
+            .alignEdgesWithSuperview([.left, .top, .bottom])
+            .width(constant: 160)
+            .height(constant: 100)
         
         movieName
-            .topToBottom(posterImageView, constant: 4)
-            .alignEdgesWithSuperview([.left, .right, .bottom], constants: [4, 4, 0])
-            .centerHorizontallyInSuperview()
-            .height(.greaterThanOrEqualTo, constant: 22)
+            .toRightOf(posterImageView, constant: 10)
+            .alignEdgesWithSuperview([.right, .top], constants: [10, 20])
         
-        containerView
-            .alignEdgesWithSuperview([.left, .right, .top, .bottom])
+        releaseDate
+            .topToBottom(movieName, constant: 4)
+            .toRightOf(posterImageView, constant: 10)
+            .alignEdgesWithSuperview([.right], constant: 10)
         
         favouriteIcon
             .height(constant: 20)
             .width(constant: 22)
-            //            .bottomToTop(posterImageView, constant: 10)
-            .alignEdges([.bottom,. right], withView: posterImageView, constants: [2, 5])
+            .alignEdges([.bottom,. right], withView: containerView, constants: [6, 10])
         
     }
     
-    func bind(viewModel: MovieCollectionViewCellViewModelType) {
-        viewModel.outputs.posterUrl.bind(to: posterImageView.rx.loadImage(true)).disposed(by: disposeBag)
+}
+
+// MARK: Binding
+private extension MovieTableViewCell {
+    func bind() {
+        viewModel.outputs.posterUrl.unwrap().debug().bind(to: posterImageView.rx.loadImage(true)).disposed(by: disposeBag)
         viewModel.outputs.name.bind(to: movieName.rx.text).disposed(by: disposeBag)
+        viewModel.outputs.releaseDate.debug("release date=").bind(to: releaseDate.rx.text).disposed(by: disposeBag)
         viewModel.outputs.isFavouriteIcon.subscribe(onNext: {[weak self] isFavourite in
             self?.favouriteIcon.tintColor = isFavourite ? .systemPink : .gray
         }).disposed(by: disposeBag)
     }
 }
-

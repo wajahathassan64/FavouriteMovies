@@ -14,21 +14,42 @@ class MovieHomeCoordinator: Coordinator<ResultType<ResultType<Void>>> {
     var root: UINavigationController!
     let movieDataProvider: MovieDataProvider
     let result = PublishSubject<ResultType<ResultType<Void>>>()
+    let userDefaultsHelper: UserDefaultsHelper
     
-    init(window: UIWindow, movieDataProvider: MovieDataProvider) {
+    init(window: UIWindow, movieDataProvider: MovieDataProvider, userDefaultsHelper: UserDefaultsHelper) {
         self.window = window
         self.movieDataProvider = movieDataProvider
+        self.userDefaultsHelper = userDefaultsHelper
     }
     
     override func start() -> Observable<ResultType<ResultType<Void>>> {
         
-        let viewModel : MovieHomeViewModelType = MovieHomeViewModel(storeDataManager: FavouriteMoviesDataManager(storage: UserDefaultsHelper()), movieDataProvider: self.movieDataProvider )
+        let viewModel = MovieHomeViewModel(storeDataManager: FavouriteMoviesDataManager(storage: userDefaultsHelper), movieDataProvider: self.movieDataProvider )
         let viewController = MovieHomeViewController(viewModel: viewModel)
         root = UINavigationController(rootViewController: viewController)
-        root.navigationBar.tintColor = .white
-        root.navigationBar.barTintColor = .black
+        root.navigationBar.barStyle = UIBarStyle.black
+        root.navigationBar.tintColor = UIColor.white
+//        root.navigationBar.barTintColor = .black
         window.rootViewController = root
         window.makeKeyAndVisible()
+        
+        viewModel.outputs.actionFavouriteMovies.subscribe(onNext: {[weak self] _ in
+            self?.navigateToFavouriteMovies()
+        }).disposed(by: disposeBag)
+        
+        viewModel.outputs.actionSearchMovies.subscribe(onNext: {[weak self] _ in
+//            self?.navigateToFavouriteMovies()
+        }).disposed(by: disposeBag)
+        
         return result
+    }
+}
+
+extension MovieHomeCoordinator {
+    
+    func navigateToFavouriteMovies() {
+        let viewModel = FavouriteMovieViewModel(storeDataManager: FavouriteMoviesDataManager(storage: userDefaultsHelper))
+        let viewController = FavouriteMovieViewController(viewModel: viewModel)
+        root.pushViewController(viewController, animated: true)
     }
 }

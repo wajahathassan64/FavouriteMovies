@@ -36,20 +36,34 @@ class MovieHomeViewController: UIViewController {
         return collectionView
     }()
     
-    
     // MARK: - Properties
     let disposeBag: DisposeBag
     let viewModel: MovieHomeViewModelType
-    var cardDataSource: RxCollectionViewSectionedReloadDataSource<SectionModel<Int, ReusableCollectionViewCellViewModelType>>!
+    var dataSource: RxCollectionViewSectionedReloadDataSource<SectionModel<Int, ReusableCollectionViewCellViewModelType>>!
     
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
         bind()
-        
+        setUpNavigationItems()
         viewModel.inputs.loadNextPageObserver.onNext(())
+    }
+    
+    func setUpNavigationItems() {
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage.init(named: "icon_favourite_empty"), style: .plain, target: self, action: #selector(self.favouriteAction(_:)))
         
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage.init(named: "icon_search")?.withRenderingMode(.alwaysTemplate), style: .plain, target: self, action: #selector(self.searchAction(_:)))
+    }
+    
+    @objc
+    func favouriteAction(_ sender: UIButton) {
+        viewModel.inputs.actionFavouriteMoviesObserver.onNext(())
+    }
+    
+    @objc
+    func searchAction(_ sender: UIButton) {
+        viewModel.inputs.actionSearchMoviesObserver.onNext(())
     }
 }
 
@@ -58,11 +72,10 @@ fileprivate extension MovieHomeViewController {
     func setup() {
         setupViews()
         setupConstraints()
-        
     }
     
     func setupViews() {
-        title = "MoveDemo"
+        title = "Move Demo"
         view.backgroundColor = .black
         view.addSubview(collectionView)
         collectionView.register(MovieCollectionViewCell.self, forCellWithReuseIdentifier: MovieCollectionViewCell.reuseIdentifier)
@@ -79,13 +92,14 @@ fileprivate extension MovieHomeViewController {
     func bind() { bindCollectionView() }
     
     func bindCollectionView() {
-        cardDataSource = RxCollectionViewSectionedReloadDataSource(configureCell: { (_, collectionView, indexPath, viewModel) in
+        dataSource = RxCollectionViewSectionedReloadDataSource(configureCell: { (_, collectionView, indexPath, viewModel) in
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: viewModel.reusableIdentifier, for: indexPath) as! RxUICollectionViewCell
             cell.configure(with: viewModel)
             return cell
         })
         
-        viewModel.outputs.dataSource.bind(to: collectionView.rx.items(dataSource: cardDataSource)).disposed(by: disposeBag)
+        viewModel.outputs.dataSource.bind(to: collectionView.rx.items(dataSource: dataSource)).disposed(by: disposeBag)
+        
     }
 }
 
@@ -121,9 +135,6 @@ extension MovieHomeViewController: UICollectionViewDelegate, UICollectionViewDel
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let bottomEdge = Float(scrollView.contentOffset.y + scrollView.frame.size.height)
         if CGFloat(bottomEdge) >= collectionView.collectionViewLayout.collectionViewContentSize.height {
-            //here call API to load next page records
-            
-            print("Next cell Calling.......................")
             viewModel.inputs.loadNextPageObserver.onNext(())
         }
         

@@ -8,10 +8,6 @@
 import Foundation
 import RxSwift
 
-public protocol ReusableCollectionViewCellViewModelType {
-    var reusableIdentifier: String { get }
-}
-
 protocol MovieCollectionViewCellViewModelInputs {
     var favouriteIconTapObserver: AnyObserver<Void>{ get }
     var isFavouriteIconObserver: AnyObserver<Bool>{ get }
@@ -39,6 +35,7 @@ class MovieCollectionViewCellViewModel: ReusableCollectionViewCellViewModelType,
     let movieResult: MovieResults
     let disposeBag = DisposeBag()
     var reusableIdentifier: String { return MovieCollectionViewCell.reuseIdentifier }
+
     
     //MARK: - Subjects
     private let posterUrlSubject: BehaviorSubject<ImageWithURL>
@@ -65,7 +62,7 @@ class MovieCollectionViewCellViewModel: ReusableCollectionViewCellViewModelType,
         self.movieResult = movieResult
         posterUrlSubject = BehaviorSubject(value: movieResult.posterImageWithUrl)
         nameSubject = BehaviorSubject(value: movieResult.title)
-        releaseDateSubject = BehaviorSubject(value: movieResult.releaseDate)
+        releaseDateSubject = BehaviorSubject(value: movieResult.formattedReleaseDate)
         favouriteIonTapSubject.map{ self.movieResult }.bind(to: storeFavouriteSubject).disposed(by: disposeBag)
     }
     

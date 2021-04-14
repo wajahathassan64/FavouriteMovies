@@ -7,11 +7,11 @@
 
 import UIKit
 import RxSwift
+import WHCustomizeConstraint
 
 open class RxUICollectionViewCell: UICollectionViewCell, ReusableView {
     
     private(set) public var disposeBag = DisposeBag()
-    public var indexPath: IndexPath!
     
     override open func prepareForReuse() {
         super.prepareForReuse()
