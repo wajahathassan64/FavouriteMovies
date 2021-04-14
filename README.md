@@ -17,12 +17,14 @@
 
 ## Pode used in this code project
 
-  pod 'RxSwift'
-  pod 'RxCocoa'
-  pod 'SDWebImage'
-  pod 'RxSwiftExt'
-  pod 'RxDataSources'
-  pod 'WHCustomizeConstraint'
+<ul>
+<li>pod 'RxSwift'</li>
+<li>pod 'RxCocoa'</li>
+<li>pod 'SDWebImage'</li>
+<li>pod 'RxSwiftExt'</li>
+<li>pod 'RxDataSources'</li>
+<li> pod 'WHCustomizeConstraint'</li>
+</ul>
 
 ## Author
 
