@@ -17,7 +17,7 @@ public protocol URLRequestConvertible {
 
 enum Route: String {
     case getMovieList = "/3/movie/popular"
-    case searchMoview = "/live"
+    case searchMoview = ""
 }
 
 enum HTTPMethod {

@@ -8,7 +8,7 @@
 import Foundation
 
 extension Date {
-    public var localizedStringOfDate: String {
+    var localizedStringOfDate: String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMM, dd, yyyy"
         return dateFormatter.string(from: self)

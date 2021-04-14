@@ -8,7 +8,7 @@
 import Foundation
 import RxSwift
 
-public extension UIViewController {
+extension UIViewController {
     func showAlert(title: String = "", message: String, defaultButtonTitle: String = "OK", secondayButtonTitle: String? = nil, defaultButtonHandler: ((UIAlertAction) -> Void)? = nil, secondaryButtonHandler: ((UIAlertAction) -> Void)? = nil, completion: (() -> Void)? = nil) {
         
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -27,7 +27,7 @@ public extension UIViewController {
 }
 
 extension Reactive where Base: UIViewController {
-    public var showErrorMessage: Binder<String> {
+    var showErrorMessage: Binder<String> {
         return Binder(base) { viewController, error in
             viewController.showAlert(message: error)
         }

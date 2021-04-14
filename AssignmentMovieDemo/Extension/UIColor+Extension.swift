@@ -7,7 +7,7 @@
 
 import Foundation
 import UIKit
-public extension UIColor {
+extension UIColor {
     static func colorFor(listItemIndex: Int) -> UIColor {
         switch listItemIndex % 6 {
         case 0: return .orange
