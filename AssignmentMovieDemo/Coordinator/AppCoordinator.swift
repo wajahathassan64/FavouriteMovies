@@ -37,7 +37,7 @@ private extension AppCoordinator {
     func MovieHomeCoordinator() {
         self.coordinate(to: AssignmentMovieDemo.MovieHomeCoordinator(window: self.window, movieDataProvider: MovieDataProvider(repository: MovieDemoRepository()), userDefaultsHelper: UserDefaultsHelper()))
             .subscribe(onNext: { [weak self] result in
-                guard let `self` = self else { return }
+//                guard let `self` = self else { return }
             })
             .disposed(by: disposeBag)
     }

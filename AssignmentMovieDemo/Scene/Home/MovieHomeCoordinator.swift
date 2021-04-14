@@ -34,7 +34,7 @@ class MovieHomeCoordinator: Coordinator<ResultType<ResultType<Void>>> {
         window.makeKeyAndVisible()
         
         viewModel.outputs.actionFavouriteMovies.subscribe(onNext: {[weak self] _ in
-            self?.navigateToFavouriteMovies()
+            self?.navigateToFavouriteMovies(isFavouriteMovieRemove: viewModel.inputs.isFavouriteMovieRemoveObserver)
         }).disposed(by: disposeBag)
         
         viewModel.outputs.actionSearchMovies.subscribe(onNext: {[weak self] _ in
@@ -47,8 +47,8 @@ class MovieHomeCoordinator: Coordinator<ResultType<ResultType<Void>>> {
 
 extension MovieHomeCoordinator {
     
-    func navigateToFavouriteMovies() {
-        let viewModel = FavouriteMovieViewModel(storeDataManager: FavouriteMoviesDataManager(storage: userDefaultsHelper))
+    func navigateToFavouriteMovies(isFavouriteMovieRemove: AnyObserver<Void> ) {
+        let viewModel = FavouriteMovieViewModel(storeDataManager: FavouriteMoviesDataManager(storage: userDefaultsHelper), isFavouriteMovieRemove: isFavouriteMovieRemove)
         let viewController = FavouriteMovieViewController(viewModel: viewModel)
         root.pushViewController(viewController, animated: true)
     }

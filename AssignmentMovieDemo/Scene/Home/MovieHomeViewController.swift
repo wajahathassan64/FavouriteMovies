@@ -138,7 +138,7 @@ extension MovieHomeViewController: UICollectionViewDelegate, UICollectionViewDel
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let bottomEdge = Float(scrollView.contentOffset.y + scrollView.frame.size.height)
-        if CGFloat(bottomEdge) >= collectionView.collectionViewLayout.collectionViewContentSize.height {
+        if CGFloat(bottomEdge  + 1000 ) >= collectionView.collectionViewLayout.collectionViewContentSize.height {
             viewModel.inputs.loadNextPageObserver.onNext(())
         }
         
