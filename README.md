@@ -15,7 +15,7 @@
 <li>Movies in grid support pagination.</li>
 </ul>
 
-## Pode used in this code project
+## Pods used in this code project
 
 <ul>
 <li>pod 'RxSwift'</li>
