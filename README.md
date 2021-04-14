@@ -1,4 +1,4 @@
-# WHCustomizeConstraint
+# Favourite Movies Code Challenge
 
 [![CI Status](https://img.shields.io/travis/wajahathassan64/WHCustomizeConstraint.svg?style=flat)](https://travis-ci.org/wajahathassan64/WHCustomizeConstraint)
 [![Version](https://img.shields.io/cocoapods/v/WHCustomizeConstraint.svg?style=flat)](https://cocoapods.org/pods/WHCustomizeConstraint)
