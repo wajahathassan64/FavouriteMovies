@@ -8,12 +8,12 @@
 
 ## Features
 <ul>
-<li>Swift 5 sweetness.</li>
-<li>Everything you can do with Auto Layout in shorter way.</li>
-<li>Constraints are active by default.</li>
-<li>Compatible with other Auto Layout code.</li>
-<li>Set constraint priorities upon creation.</li>
-<li>Constrain directly to the superview.</li>
+<li>Cheetay Code Challenge Assignment Features.</li>
+<li>Movie in collection view.</li>
+<li>Store favourite movies.</li>
+<li>Remove favourite movies.</li>
+<li>Favourite movies list using tableView.</li>
+<li>Movies in grid support pagination.</li>
 </ul>
 
 ## Installation
