@@ -8,14 +8,14 @@
 
 ## Features
 <ul>
-<li>Movie in collection view.</li>
+<li>Movies in collection view.</li>
 <li>Store favourite movies.</li>
 <li>Remove favourite movies.</li>
 <li>Favourite movies list using tableView.</li>
-<li>Movies in grid support pagination.</li>
+<li>Movies in grid supports pagination.</li>
 </ul>
 
-## Pods used in this code project
+## Pods used in this project
 
 <ul>
 <li>pod 'RxSwift'</li>
