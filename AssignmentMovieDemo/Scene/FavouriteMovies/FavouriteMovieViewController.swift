@@ -78,7 +78,7 @@ fileprivate extension FavouriteMovieViewController {
             return cell
         })
         
-        viewModel.outputs.dataSource.debug().bind(to: tableView.rx.items(dataSource: dataSource)).disposed(by: disposeBag)
+        viewModel.outputs.dataSource.bind(to: tableView.rx.items(dataSource: dataSource)).disposed(by: disposeBag)
     }
 }
 

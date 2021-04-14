@@ -15,39 +15,36 @@ class MovieDataProvider: MovieDataProviderType {
     private var repository: MovieDemoRepository
     private var moviesListContainer: [MovieResults] = []
     private var moviesSubject: BehaviorSubject<[MovieResults]?>
-    private let disposeBag = DisposeBag()
+    private var errorSubject: PublishSubject<String>
     var movies: Observable<[MovieResults]?> { return moviesSubject.asObservable() }
+    var error: Observable<String>{ errorSubject.asObservable() }
     let fetchSubject = PublishSubject<Void>()
+    private let disposeBag = DisposeBag()
     
     
     init(repository: MovieDemoRepository) {
         self.repository = repository
         self.moviesSubject = BehaviorSubject(value: nil)
+        self.errorSubject = PublishSubject()
         self.currentPage = 0
         self.totalPages = 1
         fetchMovies()
     }
     
     func fetchMovies() {
-        let request = fetchSubject
-            .flatMap { [unowned self] in
-                self.repository.getMovies(pageNumber: currentPage + 1)
-            }
-            .share()
+        
+        let request = fetchSubject.flatMap { [unowned self] in self.repository.getMovies(pageNumber: currentPage + 1) }.share()
         
         request.elements()
-            .do(onNext: {[weak self] movies in
-                self?.currentPage = movies?.page ?? 0;
-                self?.totalPages = movies?.totalPages ?? 0
-            })
+            .do(onNext: {[weak self] movies in self?.currentPage = movies?.page ?? 0; self?.totalPages = movies?.totalPages ?? 0 })
             .unwrap()
-            .map{ movies -> [MovieResults]? in self.moviesListContainer.append(contentsOf: movies.movieList)
-                return self.moviesListContainer
+            .map{[weak self] movies -> [MovieResults]? in
+                self?.moviesListContainer
+                    .append(contentsOf: movies.movieList)
+                return self?.moviesListContainer
             }.bind(to: moviesSubject).disposed(by: disposeBag)
         
-        request.errors().map{ $0.localizedDescription }.subscribe(onNext: { error in
-            print("error =========>>>", error)
-        }).disposed(by: disposeBag)
+        request.errors().map{ $0.localizedDescription }.bind(to: errorSubject).disposed(by: disposeBag)
     }
     
     func isLastPage() -> Bool {

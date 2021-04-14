@@ -150,9 +150,9 @@ private extension MovieTableViewCell {
 // MARK: Binding
 private extension MovieTableViewCell {
     func bind() {
-        viewModel.outputs.posterUrl.unwrap().debug().bind(to: posterImageView.rx.loadImage(true)).disposed(by: disposeBag)
+        viewModel.outputs.posterUrl.unwrap().bind(to: posterImageView.rx.loadImage(true)).disposed(by: disposeBag)
         viewModel.outputs.name.bind(to: movieName.rx.text).disposed(by: disposeBag)
-        viewModel.outputs.releaseDate.debug("release date=").bind(to: releaseDate.rx.text).disposed(by: disposeBag)
+        viewModel.outputs.releaseDate.bind(to: releaseDate.rx.text).disposed(by: disposeBag)
         viewModel.outputs.isFavouriteIcon.subscribe(onNext: {[weak self] isFavourite in
             self?.favouriteIcon.tintColor = isFavourite ? .systemPink : .gray
         }).disposed(by: disposeBag)

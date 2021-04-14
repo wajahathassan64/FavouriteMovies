@@ -20,6 +20,7 @@ protocol MovieHomeViewModelOutputs {
     var actionSearchMovies: Observable<Void>{ get }
     var movies: Observable<[MovieResults]?>{ get }
     var dataSource: Observable<[SectionModel<Int, ReusableCollectionViewCellViewModelType>]> { get }
+    var error: Observable<String>{ get }
 }
 
 protocol MovieHomeViewModelType {
@@ -38,6 +39,7 @@ class MovieHomeViewModel: MovieHomeViewModelType, MovieHomeViewModelInputs, Movi
     var outputs: MovieHomeViewModelOutputs { return self }
     
     //MARK: - Subjects
+    private let errorSubject = PublishSubject<String>()
     private let loadNextPageSubject = PublishSubject<Void>()
     private let actionSearchMoviesSubject = PublishSubject<Void>()
     private let actionFavouriteMoviesSubject = PublishSubject<Void>()
@@ -50,6 +52,7 @@ class MovieHomeViewModel: MovieHomeViewModelType, MovieHomeViewModelInputs, Movi
     var actionSearchMoviesObserver: AnyObserver<Void>{ actionSearchMoviesSubject.asObserver() }
     
     //MARK: - Outputs
+    var error: Observable<String>{ errorSubject.asObservable() }
     var actionFavouriteMovies: Observable<Void>{ actionFavouriteMoviesSubject.asObservable() }
     var actionSearchMovies: Observable<Void>{ actionSearchMoviesSubject.asObservable() }
     var movies: Observable<[MovieResults]?>{ moviesSubject.asObservable() }
@@ -60,7 +63,7 @@ class MovieHomeViewModel: MovieHomeViewModelType, MovieHomeViewModelInputs, Movi
         self.storeDataManager = storeDataManager
         self.movieDataProvider = movieDataProvider
         makeCellViewModels()
-        fetchMovies()
+        requestSubjectInit()
         refreshCellViewModels()
     }
     
@@ -94,11 +97,14 @@ private extension MovieHomeViewModel {
         
     }
     
-    func fetchMovies() {
+    func requestSubjectInit() {
+        //data
         self.movieDataProvider.movies.subscribe(onNext: {[weak self] movies in
             self?.moviesSubject.onNext(movies)
         }).disposed(by: disposeBag)
-        
+        //error
+        movieDataProvider.error.bind(to: errorSubject).disposed(by: disposeBag)
+        //load next
         loadNextPageSubject.subscribe(onNext: {[unowned self] _ in
             guard !self.movieDataProvider.isLastPage() else { return }
             self.movieDataProvider.fetchSubject.onNext(())

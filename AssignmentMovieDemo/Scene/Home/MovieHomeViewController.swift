@@ -34,7 +34,7 @@ class MovieHomeViewController: UIViewController {
         collectionView.contentInsetAdjustmentBehavior = .automatic
         collectionView.isDirectionalLockEnabled = true
         return collectionView
-    }()
+    }()   
     
     // MARK: - Properties
     let disposeBag: DisposeBag
@@ -48,6 +48,7 @@ class MovieHomeViewController: UIViewController {
         bind()
         setUpNavigationItems()
         viewModel.inputs.loadNextPageObserver.onNext(())
+        
     }
     
     func setUpNavigationItems() {
@@ -89,7 +90,10 @@ fileprivate extension MovieHomeViewController {
 
 // MARK: - Bind
 fileprivate extension MovieHomeViewController {
-    func bind() { bindCollectionView() }
+    func bind() {
+        bindCollectionView()
+        viewModel.outputs.error.bind(to: rx.showErrorMessage).disposed(by: disposeBag)
+    }
     
     func bindCollectionView() {
         dataSource = RxCollectionViewSectionedReloadDataSource(configureCell: { (_, collectionView, indexPath, viewModel) in
@@ -139,4 +143,5 @@ extension MovieHomeViewController: UICollectionViewDelegate, UICollectionViewDel
         }
         
     }
+    
 }
