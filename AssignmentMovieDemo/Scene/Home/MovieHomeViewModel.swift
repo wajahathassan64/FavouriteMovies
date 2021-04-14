@@ -33,8 +33,8 @@ protocol MovieHomeViewModelType {
 class MovieHomeViewModel: MovieHomeViewModelType, MovieHomeViewModelInputs, MovieHomeViewModelOutputs {
     
     //MARK: - Properties
-    let storeDataManager: FavouriteMoviesDataManager
-    let movieDataProvider: MovieDataProvider
+    let storeDataManager: FavouriteMoviesDataManagerType
+    let movieDataProvider: MovieDataProviderType
     let disposeBag = DisposeBag()
     
     var inputs: MovieHomeViewModelInputs { return self }
@@ -65,7 +65,7 @@ class MovieHomeViewModel: MovieHomeViewModelType, MovieHomeViewModelInputs, Movi
     var isFavouriteMovieRemove: Observable<Void>{ isFavouriteMovieRemoveSubject.asObservable() }
     
     //MARK: - Constructor/init
-    init(storeDataManager: FavouriteMoviesDataManager, movieDataProvider: MovieDataProvider) {
+    init(storeDataManager: FavouriteMoviesDataManagerType, movieDataProvider: MovieDataProviderType) {
         self.storeDataManager = storeDataManager
         self.movieDataProvider = movieDataProvider
         makeCellViewModels()

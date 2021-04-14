@@ -8,7 +8,7 @@
 import Foundation
 import RxSwift
 
-protocol FavouriteMoviesDataManagerType: class {
+protocol FavouriteMoviesDataManagerType {
     func storeFavouriteMovie(movie: MovieResults)
     func fetchFavouriteMovie() -> [MovieResults]?
     var successSubject: PublishSubject<Void>{ get }

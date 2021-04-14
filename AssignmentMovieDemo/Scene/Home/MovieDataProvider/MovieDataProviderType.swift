@@ -9,5 +9,9 @@ import Foundation
 import RxSwift
 
 protocol MovieDataProviderType {
-    func fetchMovies() 
+    func fetchMovies()
+    func isLastPage() -> Bool
+    var movies: Observable<[MovieResults]?> { get }
+    var error: Observable<String>{ get }
+    var fetchSubject: PublishSubject<Void>{ get }
 }
