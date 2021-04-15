@@ -104,23 +104,19 @@ fileprivate extension MovieHomeViewController {
         
         viewModel.outputs.dataSource.bind(to: collectionView.rx.items(dataSource: dataSource)).disposed(by: disposeBag)
         
+        collectionView.rx.reachedBottom().bind(to: viewModel.inputs.loadNextPageObserver).disposed(by: disposeBag)
     }
 }
 
 extension MovieHomeViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
         let noOfCellsInRow = 3
-        
         let flowLayout = collectionViewLayout as! UICollectionViewFlowLayout
-        
         let totalSpace = flowLayout.sectionInset.left
             + flowLayout.sectionInset.right
             + (flowLayout.minimumInteritemSpacing * CGFloat(noOfCellsInRow - 1))
-        
         let size = Int((collectionView.bounds.width - totalSpace) / CGFloat(noOfCellsInRow))
-        
         return CGSize(width: size, height: size + 40)
     }
     
@@ -134,14 +130,6 @@ extension MovieHomeViewController: UICollectionViewDelegate, UICollectionViewDel
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 10
-    }
-    
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        let bottomEdge = Float(scrollView.contentOffset.y + scrollView.frame.size.height)
-        if CGFloat(bottomEdge  + 1000 ) >= collectionView.collectionViewLayout.collectionViewContentSize.height {
-            viewModel.inputs.loadNextPageObserver.onNext(())
-        }
-        
     }
     
 }

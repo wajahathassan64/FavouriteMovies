@@ -16,3 +16,10 @@ extension ReusableView where Self: UIView {
         return String(describing: self)
     }
 }
+
+extension UIView {
+    func layoutAllSubviews() {
+        subviews.forEach{ $0.layoutAllSubviews() }
+        layoutSubviews()
+    }
+}

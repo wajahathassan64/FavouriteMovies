@@ -24,7 +24,7 @@ class MovieHomeCoordinator: Coordinator<ResultType<ResultType<Void>>> {
     
     override func start() -> Observable<ResultType<ResultType<Void>>> {
         
-        let viewModel = MovieHomeViewModel(storeDataManager: FavouriteMoviesDataManager(storage: userDefaultsHelper), movieDataProvider: self.movieDataProvider )
+        let viewModel = MovieHomeViewModel(storeDataManager: FavouriteMoviesDataManager(storage: userDefaultsHelper), movieDataProvider: movieDataProvider )
         let viewController = MovieHomeViewController(viewModel: viewModel)
         root = UINavigationController(rootViewController: viewController)
         root.navigationBar.barStyle = UIBarStyle.black
@@ -38,7 +38,7 @@ class MovieHomeCoordinator: Coordinator<ResultType<ResultType<Void>>> {
         }).disposed(by: disposeBag)
         
         viewModel.outputs.actionSearchMovies.subscribe(onNext: {[weak self] _ in
-//            self?.navigateToFavouriteMovies()
+            self?.navigateToSearchMovies()
         }).disposed(by: disposeBag)
         
         return result
@@ -50,6 +50,12 @@ extension MovieHomeCoordinator {
     func navigateToFavouriteMovies(isFavouriteMovieRemove: AnyObserver<Void> ) {
         let viewModel = FavouriteMovieViewModel(storeDataManager: FavouriteMoviesDataManager(storage: userDefaultsHelper), isFavouriteMovieRemove: isFavouriteMovieRemove)
         let viewController = FavouriteMovieViewController(viewModel: viewModel)
+        root.pushViewController(viewController, animated: true)
+    }
+    
+    func navigateToSearchMovies() {
+        let viewModel = SearchMoviesViewModel(searchDataProvider: SearchDataProvider(repository: MovieDemoRepository()))
+        let viewController = SearchMoviesViewController(viewModel: viewModel)
         root.pushViewController(viewController, animated: true)
     }
 }

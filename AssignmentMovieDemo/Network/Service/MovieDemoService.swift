@@ -23,4 +23,10 @@ class MovieDemoService  {
         return apiClient.send(requestConvertiable: endPoint)
         
     }
+    
+    public func searchMovie<T: Codable>(searchText: String, pageNumber: Int) -> Observable<T> {
+        let endPoint = Endpoint(route: .searchMovie, method: .get, path: nil, queryItems: ["api_key" : apiKey, "query" : searchText, "page" : "\(pageNumber)"])
+        return apiClient.send(requestConvertiable: endPoint)
+        
+    }
 }

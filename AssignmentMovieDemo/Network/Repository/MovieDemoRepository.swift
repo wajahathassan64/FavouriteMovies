@@ -10,12 +10,17 @@ import RxSwift
 
 protocol MovieDemoRepositoryType {
     func getMovies(pageNumber: Int) -> Observable<Event<Movies?>>
+    func searchMovies(searchText: String, pageNumber: Int) -> Observable<Event<Movies?>>
 }
 
 class MovieDemoRepository: ServiceInstance, MovieDemoRepositoryType {
     
     func getMovies(pageNumber: Int) -> Observable<Event<Movies?>> {
         return moviewDemoService.getMovies(pageNumber: pageNumber).materialize()
+    }
+    
+    func searchMovies(searchText: String, pageNumber: Int)  -> Observable<Event<Movies?>> {
+        return moviewDemoService.searchMovie(searchText: searchText, pageNumber: pageNumber).materialize()
     }
     
 }

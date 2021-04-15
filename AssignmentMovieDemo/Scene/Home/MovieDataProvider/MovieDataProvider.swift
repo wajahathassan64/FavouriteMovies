@@ -16,18 +16,17 @@ class MovieDataProvider: MovieDataProviderType {
     private var moviesListContainer: [MovieResults] = []
     private var moviesSubject: BehaviorSubject<[MovieResults]?>
     private var errorSubject: PublishSubject<String>
-    var movies: Observable<[MovieResults]?> { return moviesSubject.asObservable() }
+    var result: Observable<[MovieResults]?> { return moviesSubject.asObservable() }
     var error: Observable<String>{ errorSubject.asObservable() }
     let fetchSubject = PublishSubject<Void>()
     private let disposeBag = DisposeBag()
     
-    
     init(repository: MovieDemoRepository) {
         self.repository = repository
-        self.moviesSubject = BehaviorSubject(value: nil)
-        self.errorSubject = PublishSubject()
-        self.currentPage = 0
-        self.totalPages = 1
+        moviesSubject = BehaviorSubject(value: nil)
+        errorSubject = PublishSubject()
+        currentPage = 0
+        totalPages = 1
         fetchMovies()
     }
     

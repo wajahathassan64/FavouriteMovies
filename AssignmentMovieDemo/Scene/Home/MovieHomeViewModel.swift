@@ -41,20 +41,19 @@ class MovieHomeViewModel: MovieHomeViewModelType, MovieHomeViewModelInputs, Movi
     var outputs: MovieHomeViewModelOutputs { return self }
     
     //MARK: - Subjects
-    private let errorSubject = PublishSubject<String>()
-    private let loadNextPageSubject = PublishSubject<Void>()
-    private let actionSearchMoviesSubject = PublishSubject<Void>()
-    private let actionFavouriteMoviesSubject = PublishSubject<Void>()
-    private let moviesSubject = BehaviorSubject<[MovieResults]?>(value: nil)
-    private let dataSourceSubject = BehaviorSubject<[SectionModel<Int, ReusableCollectionViewCellViewModelType>]>(value: [])
-    private let isFavouriteMovieRemoveSubject = PublishSubject<Void>()
+   internal let errorSubject = PublishSubject<String>()
+   internal let loadNextPageSubject = PublishSubject<Void>()
+   internal let actionSearchMoviesSubject = PublishSubject<Void>()
+   internal let actionFavouriteMoviesSubject = PublishSubject<Void>()
+   internal let moviesSubject = BehaviorSubject<[MovieResults]?>(value: nil)
+   internal let dataSourceSubject = BehaviorSubject<[SectionModel<Int, ReusableCollectionViewCellViewModelType>]>(value: [])
+   internal let isFavouriteMovieRemoveSubject = PublishSubject<Void>()
     
     //MARK: - Inputs
     var loadNextPageObserver: AnyObserver<Void>{ loadNextPageSubject.asObserver() }
     var actionFavouriteMoviesObserver: AnyObserver<Void>{ actionFavouriteMoviesSubject.asObserver() }
     var actionSearchMoviesObserver: AnyObserver<Void>{ actionSearchMoviesSubject.asObserver() }
     var isFavouriteMovieRemoveObserver: AnyObserver<Void>{ isFavouriteMovieRemoveSubject.asObserver() }
-    
     
     //MARK: - Outputs
     var error: Observable<String>{ errorSubject.asObservable() }
@@ -79,6 +78,7 @@ class MovieHomeViewModel: MovieHomeViewModelType, MovieHomeViewModelInputs, Movi
 private extension MovieHomeViewModel {
     
     func makeCellViewModels() {
+    
         let cellViewModels = moviesSubject.unwrap().delay(.nanoseconds(1), scheduler: MainScheduler.asyncInstance)
             .map{ [unowned self] moviesList -> [ReusableCollectionViewCellViewModelType] in
                 
@@ -103,14 +103,12 @@ private extension MovieHomeViewModel {
             .map { [SectionModel(model: 1, items: $0)]}
             .bind(to: dataSourceSubject)
             .disposed(by: disposeBag)
-        
+            
     }
     
     func requestSubjectInit() {
         //data
-        self.movieDataProvider.movies.subscribe(onNext: {[weak self] movies in
-            self?.moviesSubject.onNext(movies)
-        }).disposed(by: disposeBag)
+        movieDataProvider.result.bind(to: moviesSubject).disposed(by: disposeBag)
         //error
         movieDataProvider.error.bind(to: errorSubject).disposed(by: disposeBag)
         //load next
@@ -121,7 +119,7 @@ private extension MovieHomeViewModel {
     }
     
     func storeDataManagerObserver() {
-        self.storeDataManager.successSubject.subscribe(onNext: {[weak self] _ in
+        storeDataManager.successSubject.subscribe(onNext: {[weak self] _ in
             self?.makeCellViewModels()
         }).disposed(by: disposeBag)
     }
