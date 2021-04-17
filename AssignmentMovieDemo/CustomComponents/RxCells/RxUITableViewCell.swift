@@ -10,19 +10,19 @@ import UIKit
 import RxSwift
 import WHCustomizeConstraint
 
-public protocol ReusableTableViewCellViewModelType {
+protocol ReusableTableViewCellViewModelType {
     var reusableIdentifier: String { get }
 }
 
-open class RxUITableViewCell: UITableViewCell, ReusableView {
+class RxUITableViewCell: UITableViewCell, ReusableView {
     private(set) public var disposeBag = DisposeBag()
     
-    override open func prepareForReuse() {
+    override func prepareForReuse() {
         super.prepareForReuse()
         disposeBag = DisposeBag()
     }
     
-    open func configure(with viewModel: Any) {
+    func configure(with viewModel: Any) {
         fatalError("Configure with viewModel must be implemented.")
     }
     

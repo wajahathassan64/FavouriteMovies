@@ -54,8 +54,12 @@ extension MovieHomeCoordinator {
     }
     
     func navigateToSearchMovies() {
-        let viewModel = SearchMoviesViewModel(searchDataProvider: SearchDataProvider(repository: MovieDemoRepository()))
+        let viewModel = SearchMoviesViewModel(searchDataProvider: SearchDataProvider(repository: MovieDemoRepository()), storeDataManager: FavouriteMoviesDataManager(storage: userDefaultsHelper))
         let viewController = SearchMoviesViewController(viewModel: viewModel)
         root.pushViewController(viewController, animated: true)
+        
+        viewModel.outputs.cancel.subscribe(onNext: {[weak self] _ in
+            self?.root.popViewController(animated: true)
+        }).disposed(by: disposeBag)
     }
 }

@@ -11,6 +11,7 @@ import RxSwift
 
 protocol SearchInputType {
     var searchMovieSubject: BehaviorSubject<String?>{ get }
+    var reloadDataSubject: PublishSubject<Void>{ get }
 }
 
 protocol SearchDataProviderType: MovieDataProviderType & SearchInputType { }

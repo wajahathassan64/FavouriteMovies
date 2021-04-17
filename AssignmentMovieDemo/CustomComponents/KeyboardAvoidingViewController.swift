@@ -10,13 +10,13 @@ import UIKit
 
 // MARK: Keyboard handling
 
-open class KeyboardAvoidingViewController: UIViewController {
+class KeyboardAvoidingViewController: UIViewController {
     
     private var constant: CGFloat = 0
     private var keyboardConstraint: NSLayoutConstraint?
     public var keyboardAvoidingBottomOffset: CGFloat = 0
     
-    open override func viewDidAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         guard UIScreen.main.bounds.size.height != 568 else { return }
@@ -32,7 +32,7 @@ open class KeyboardAvoidingViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
-    open override func viewWillDisappear(_ animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)

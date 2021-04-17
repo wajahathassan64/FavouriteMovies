@@ -23,7 +23,7 @@ class MovieTableViewCell: RxUITableViewCell {
     
     private lazy var posterImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleToFill
+        imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -35,7 +35,7 @@ class MovieTableViewCell: RxUITableViewCell {
         label.textColor = .white
         label.lineBreakMode = .byCharWrapping
         label.numberOfLines = 0
-        label.textAlignment = .center
+        label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -46,7 +46,7 @@ class MovieTableViewCell: RxUITableViewCell {
         label.textColor = .white
         label.lineBreakMode = .byCharWrapping
         label.numberOfLines = 0
-        label.textAlignment = .center
+        label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -91,8 +91,16 @@ class MovieTableViewCell: RxUITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         containerView.layer.cornerRadius = 4
-        posterImageView.layer.cornerRadius = 4
+       
+        
     }
+    
+    override func draw(_ rect: CGRect) {
+        super.draw(rect)
+        posterImageView.layer.cornerRadius = posterImageView.bounds.height / 2
+        posterImageView.clipsToBounds = true
+    }
+    
     
     func addActionOnFavouriteIcon() {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(favouriteIconTap(tapGestureRecognizer:)))
@@ -105,6 +113,7 @@ class MovieTableViewCell: RxUITableViewCell {
         favouriteIcon.tintColor = .systemPink
         viewModel.inputs.favouriteIconTapObserver.onNext(())
     }
+    
     
 }
 
@@ -125,13 +134,14 @@ private extension MovieTableViewCell {
             .alignEdgesWithSuperview([.left, .right, .top, .bottom], constants: [10,10, 0, 10])
         
         posterImageView
-            .alignEdgesWithSuperview([.left, .top, .bottom])
-            .width(constant: 160)
-            .height(constant: 100)
+            .alignEdgesWithSuperview([.left, .top, .bottom], constant: 10)
+            .width(constant: 80)
+            .height(constant: 80)
+            .centerVerticallyInSuperview()
         
         movieName
             .toRightOf(posterImageView, constant: 10)
-            .alignEdgesWithSuperview([.right, .top], constants: [10, 20])
+            .alignEdgesWithSuperview([.right, .top], constants: [10, 24])
         
         releaseDate
             .topToBottom(movieName, constant: 4)

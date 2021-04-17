@@ -62,7 +62,7 @@ private extension FavouriteMovieViewModel {
             let viewModels = moviesList.map { [unowned self] movieList -> ReusableTableViewCellViewModelType in
                 let viewModel = MovieTableViewCellViewModelViewModel(movieResult: movieList)
                 
-                viewModel.outputs.removeFavourite.subscribe(onNext:{[weak self] movie in
+                viewModel.outputs.favourite.subscribe(onNext:{[weak self] movie in
                     self?.storeDataManager.storeFavouriteMovie(movie: movie)
                 }).disposed(by: disposeBag)
                 
@@ -85,7 +85,7 @@ private extension FavouriteMovieViewModel {
     
     func fetchMovieListdb() {
         if let movies = storeDataManager.fetchFavouriteMovie() {
-            moviesSubject.onNext(movies)
+            moviesSubject.onNext(movies.reversed())
         }
     }
     

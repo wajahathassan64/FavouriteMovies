@@ -17,7 +17,7 @@ protocol MovieTableViewCellViewModelOutputs {
     var posterUrl: Observable<ImageWithURL?>{ get }
     var name: Observable<String>{ get }
     var releaseDate: Observable<String>{ get }
-    var removeFavourite: Observable<MovieResults>{ get }
+    var favourite: Observable<MovieResults>{ get }
     var isFavouriteIcon: Observable<Bool>{ get }
 }
 
@@ -52,7 +52,7 @@ class MovieTableViewCellViewModelViewModel: ReusableTableViewCellViewModelType, 
     var posterUrl: Observable<ImageWithURL?>{ posterUrlSubject.asObservable() }
     var name: Observable<String>{ nameSubject.asObservable() }
     var releaseDate: Observable<String>{ releaseDateSubject.asObservable() }
-    var removeFavourite: Observable<MovieResults>{ removeFavouriteSubject.asObservable() }
+    var favourite: Observable<MovieResults>{ removeFavouriteSubject.asObservable() }
     var isFavouriteIcon: Observable<Bool>{ isFavouriteIconSubject.asObservable() }
     
     //MARK: - Constructor/init

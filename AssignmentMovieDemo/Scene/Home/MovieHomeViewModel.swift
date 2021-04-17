@@ -41,13 +41,13 @@ class MovieHomeViewModel: MovieHomeViewModelType, MovieHomeViewModelInputs, Movi
     var outputs: MovieHomeViewModelOutputs { return self }
     
     //MARK: - Subjects
-   internal let errorSubject = PublishSubject<String>()
-   internal let loadNextPageSubject = PublishSubject<Void>()
-   internal let actionSearchMoviesSubject = PublishSubject<Void>()
-   internal let actionFavouriteMoviesSubject = PublishSubject<Void>()
-   internal let moviesSubject = BehaviorSubject<[MovieResults]?>(value: nil)
-   internal let dataSourceSubject = BehaviorSubject<[SectionModel<Int, ReusableCollectionViewCellViewModelType>]>(value: [])
-   internal let isFavouriteMovieRemoveSubject = PublishSubject<Void>()
+   private let errorSubject = PublishSubject<String>()
+   private let loadNextPageSubject = PublishSubject<Void>()
+   private let actionSearchMoviesSubject = PublishSubject<Void>()
+   private let actionFavouriteMoviesSubject = PublishSubject<Void>()
+   private let moviesSubject = BehaviorSubject<[MovieResults]?>(value: nil)
+   private let dataSourceSubject = BehaviorSubject<[SectionModel<Int, ReusableCollectionViewCellViewModelType>]>(value: [])
+   private let isFavouriteMovieRemoveSubject = PublishSubject<Void>()
     
     //MARK: - Inputs
     var loadNextPageObserver: AnyObserver<Void>{ loadNextPageSubject.asObserver() }
@@ -79,7 +79,7 @@ private extension MovieHomeViewModel {
     
     func makeCellViewModels() {
     
-        let cellViewModels = moviesSubject.unwrap().delay(.nanoseconds(1), scheduler: MainScheduler.asyncInstance)
+        let cellViewModels = moviesSubject.unwrap().delay(.nanoseconds(1), scheduler: MainScheduler.instance)
             .map{ [unowned self] moviesList -> [ReusableCollectionViewCellViewModelType] in
                 
             let viewModels = moviesList.map { [unowned self] movieList -> ReusableCollectionViewCellViewModelType in

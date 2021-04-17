@@ -9,16 +9,16 @@ import UIKit
 import RxSwift
 import WHCustomizeConstraint
 
-open class RxUICollectionViewCell: UICollectionViewCell, ReusableView {
+class RxUICollectionViewCell: UICollectionViewCell, ReusableView {
     
     private(set) public var disposeBag = DisposeBag()
     
-    override open func prepareForReuse() {
+    override func prepareForReuse() {
         super.prepareForReuse()
         disposeBag = DisposeBag()
     }
     
-    open func configure(with viewModel: Any) {
+    func configure(with viewModel: Any) {
         fatalError("Configure with viewModel must be implemented.")
     }
     

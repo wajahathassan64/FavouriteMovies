@@ -20,6 +20,7 @@ class SearchDataProvider: SearchDataProviderType {
     let fetchSubject = PublishSubject<Void>()
     var searchMovieSubject = BehaviorSubject<String?>(value: nil)
     var searchQuery = ""
+    var reloadDataSubject = PublishSubject<Void>()
     
     init(repository: MovieDemoRepository) {
         self.repository = repository
@@ -55,6 +56,10 @@ class SearchDataProvider: SearchDataProviderType {
             .bind(to: moviesSubject).disposed(by: disposeBag)
         
         request.errors().map{ $0.localizedDescription }.bind(to: errorSubject).disposed(by: disposeBag)
+        
+        reloadDataSubject.subscribe(onNext: {[weak self] _ in
+            self?.moviesSubject.onNext(self?.moviesListContainer)
+        }).disposed(by: disposeBag)
     }
     
     func isLastPage() -> Bool {

@@ -34,12 +34,15 @@ class SearchMoviesViewController: KeyboardAvoidingViewController {
     
     private lazy var searchBar: AppSearchTextField = {
         let textField = AppSearchTextField()
-        textField.placeholder = "Search"
         textField.returnKeyType = .search
         textField.borderStyle = .none
+        textField.textColor = .white
         textField.backgroundColor = UIColor.gray.withAlphaComponent(0.35)
         textField.font = UIFont.systemFont(ofSize: 14)
         textField.layer.cornerRadius = 17.5
+        textField.attributedPlaceholder =
+        NSAttributedString(string: "Search",
+        attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray])
         textField.clipsToBounds = false
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
@@ -98,7 +101,7 @@ fileprivate extension SearchMoviesViewController {
         view.addSubview(tableView)
         
         tableView.register(MovieTableViewCell.self, forCellReuseIdentifier: MovieTableViewCell.reuseIdentifier)
-        
+        tableView.register(NoSearchResultCell.self, forCellReuseIdentifier: NoSearchResultCell.reuseIdentifier)
     }
     
     func setupConstraints() {
@@ -108,6 +111,7 @@ fileprivate extension SearchMoviesViewController {
         
         searchBar
             .height(constant: 35)
+            .alignEdgeWithSuperview(.bottom, constant: 10)
         
         cancelButton
             .width(constant: 50)
@@ -133,8 +137,10 @@ fileprivate extension SearchMoviesViewController {
         
         viewModel.outputs.error.bind(to: rx.showErrorMessage).disposed(by: disposeBag)
         
+//        viewModel.outputs.reloadMovieData.subscribe(onNext: {[weak self] _ in
+//            self?.tableView.reloadData()
+//        }).disposed(by: disposeBag)
     }
-    
     func bindTableView() {
         dataSource = RxTableViewSectionedReloadDataSource(configureCell: { (_, tableView, _, viewModel) in
             let cell = tableView.dequeueReusableCell(withIdentifier: viewModel.reusableIdentifier) as! RxUITableViewCell
@@ -148,7 +154,6 @@ fileprivate extension SearchMoviesViewController {
             .do(onNext: { [weak self] _ in
                 self?.searchBar.resignFirstResponder()
                 self?.view.endEditing(true)
-                //                self?.dismissKeyboard()
             })
             .map { $0.movieResult }
             .bind(to: viewModel.inputs.selectMovieObserver)
