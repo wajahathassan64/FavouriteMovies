@@ -74,13 +74,6 @@ class MovieTableViewCell: RxUITableViewCell {
         super.init(coder: aDecoder)
     }
     
-    private lazy var separator: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor.init(red: 151.0/255.0, green: 151.0/255.0, blue: 151.0/255.0, alpha: 0.11)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
     // MARK: Configuration
     override func configure(with viewModel: Any) {
         guard let viewModel = viewModel as? MovieTableViewCellViewModelType else { return }
@@ -97,8 +90,7 @@ class MovieTableViewCell: RxUITableViewCell {
     
     override func draw(_ rect: CGRect) {
         super.draw(rect)
-        posterImageView.layer.cornerRadius = posterImageView.bounds.height / 2
-        posterImageView.clipsToBounds = true
+        posterImageView.roundView(withBorderColor: .white, withBorderWidth: 1.0)
     }
     
     
@@ -141,17 +133,19 @@ private extension MovieTableViewCell {
         
         movieName
             .toRightOf(posterImageView, constant: 10)
-            .alignEdgesWithSuperview([.right, .top], constants: [10, 24])
+            .alignEdgeWithSuperview(.top, .lessThanOrEqualTo , constant: 24)
+            .alignEdgeWithSuperview(.right, constant: 10)
         
         releaseDate
             .topToBottom(movieName, constant: 4)
             .toRightOf(posterImageView, constant: 10)
-            .alignEdgesWithSuperview([.right], constant: 10)
+            .alignEdgeWithSuperview(.right, constant: 10)
+            .alignEdgeWithSuperview(.bottom, .greaterThanOrEqualTo , constant: 6)
         
         favouriteIcon
-            .height(constant: 20)
-            .width(constant: 22)
-            .alignEdges([.bottom,. right], withView: containerView, constants: [6, 10])
+            .height(constant: 22)
+            .width(constant: 24)
+            .alignEdges([.bottom,. right], withView: containerView, constants: [8, 12])
         
     }
     

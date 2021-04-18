@@ -44,6 +44,11 @@ class FavouriteMovieViewController: UIViewController {
         setup()
         bind()
         bindTableView()
+        addBackButton()
+    }
+    
+    override func onTapBackButton() {
+        viewModel.inputs.backObserver.onNext(())
     }
 }
 
@@ -79,6 +84,12 @@ fileprivate extension FavouriteMovieViewController {
         })
         
         viewModel.outputs.dataSource.bind(to: tableView.rx.items(dataSource: dataSource)).disposed(by: disposeBag)
+        
+        tableView.rx
+            .modelSelected(MovieTableViewCellViewModel.self)
+            .map{ $0.movieResult }
+            .bind(to: viewModel.inputs.selectMovieObserver)
+            .disposed(by: disposeBag)
     }
 }
 

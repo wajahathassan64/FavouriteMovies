@@ -9,10 +9,17 @@ import Foundation
 import RxSwift
 import RxDataSources
 
-protocol FavouriteMovieViewModelInputs { }
+protocol FavouriteMovieViewModelInputs {
+    var reloadDataObserver: AnyObserver<Void>{ get }
+    var selectMovieObserver: AnyObserver<MovieResults>{ get }
+    var backObserver: AnyObserver<Void>{ get }
+}
 
 protocol FavouriteMovieViewModelOutputs {
+    var back: Observable<Void>{ get }
+    var reloadMovieData: Observable<Void>{ get }
     var movies: Observable<[MovieResults]?>{ get }
+    var selectMovie: Observable<MovieResults>{ get }
     var dataSource: Observable<[SectionModel<Int, ReusableTableViewCellViewModelType>]> { get }
 }
 
@@ -25,21 +32,30 @@ class FavouriteMovieViewModel: FavouriteMovieViewModelType, FavouriteMovieViewMo
     
     //MARK: - Properties
     let storeDataManager: FavouriteMoviesDataManager
-    var isFavouriteMovieRemove: AnyObserver<Void>!
+    var isFavouriteMovieRemove: AnyObserver<Void>
     let disposeBag = DisposeBag()
     
     var inputs: FavouriteMovieViewModelInputs { return self }
     var outputs: FavouriteMovieViewModelOutputs { return self }
     
     //MARK: - Subjects
+    private let backSubject = PublishSubject<Void>()
+    private let reloadDataSubject = PublishSubject<Void>()
     private let loadNextPageSubject = PublishSubject<Void>()
+    private let selectMovieSubject = PublishSubject<MovieResults>()
     private let moviesSubject = BehaviorSubject<[MovieResults]?>(value: nil)
     private let dataSourceSubject = BehaviorSubject<[SectionModel<Int, ReusableTableViewCellViewModelType>]>(value: [])
     
     //MARK: - Inputs
+    var backObserver: AnyObserver<Void>{ backSubject.asObserver() }
+    var reloadDataObserver: AnyObserver<Void>{ reloadDataSubject.asObserver() }
+    var selectMovieObserver: AnyObserver<MovieResults>{ selectMovieSubject.asObserver() }
     
     //MARK: - Outputs
+    var back: Observable<Void>{ backSubject.asObservable() }
     var movies: Observable<[MovieResults]?>{ moviesSubject.asObservable() }
+    var reloadMovieData: Observable<Void>{ reloadDataSubject.asObservable() }
+    var selectMovie: Observable<MovieResults>{ selectMovieSubject.asObservable() }
     var dataSource: Observable<[SectionModel<Int, ReusableTableViewCellViewModelType>]> { return dataSourceSubject.asObservable() }
     
     //MARK: - Constructor/init
@@ -49,6 +65,7 @@ class FavouriteMovieViewModel: FavouriteMovieViewModelType, FavouriteMovieViewMo
         makeCellViewModels()
         fetchMovieListdb()
         refreshCellViewModels()
+        
     }
 }
 
@@ -87,6 +104,11 @@ private extension FavouriteMovieViewModel {
     
     func refreshCellViewModels() {
         self.storeDataManager.successSubject.subscribe(onNext: {[weak self] _ in
+            self?.fetchMovieListdb()
+            self?.isFavouriteMovieRemove.onNext(())
+        }).disposed(by: disposeBag)
+        
+        reloadMovieData.subscribe(onNext: {[weak self] _ in
             self?.fetchMovieListdb()
             self?.isFavouriteMovieRemove.onNext(())
         }).disposed(by: disposeBag)

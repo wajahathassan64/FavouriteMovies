@@ -37,7 +37,11 @@ class MovieHomeCoordinator: Coordinator<ResultType<ResultType<Void>>> {
         }).disposed(by: disposeBag)
         
         viewModel.outputs.actionSearchMovies.subscribe(onNext: {[weak self] _ in
-            self?.navigateToSearchMovies()
+            self?.navigateToSearchMovies(isFavouriteMovieRemove: viewModel.inputs.isFavouriteMovieRemoveObserver)
+        }).disposed(by: disposeBag)
+        
+        viewModel.outputs.selectMovie.subscribe(onNext: {[weak self] movie in
+            self?.navigateToMovieDetails(movie, reloadDataWhenFavouritDataUpdate: viewModel.inputs.isFavouriteMovieRemoveObserver )
         }).disposed(by: disposeBag)
         
         return result
@@ -50,10 +54,18 @@ extension MovieHomeCoordinator {
         let viewModel = FavouriteMovieViewModel(storeDataManager: FavouriteMoviesDataManager(storage: userDefaultsHelper), isFavouriteMovieRemove: isFavouriteMovieRemove)
         let viewController = FavouriteMovieViewController(viewModel: viewModel)
         root.pushViewController(viewController, animated: true)
+        
+        viewModel.outputs.back.subscribe(onNext: {[weak self] _ in
+            self?.root.popViewController(animated: true)
+        }).disposed(by: disposeBag)
+        
+        viewModel.outputs.selectMovie.subscribe(onNext: {[weak self] movie in
+            self?.navigateToMovieDetails(movie, reloadDataWhenFavouritDataUpdate: viewModel.inputs.reloadDataObserver )
+        }).disposed(by: disposeBag)
     }
     
-    func navigateToSearchMovies() {
-        let viewModel = SearchMoviesViewModel(searchDataProvider: SearchDataProvider(repository: MovieDemoRepository()), storeDataManager: FavouriteMoviesDataManager(storage: userDefaultsHelper), searchResultDataManager: SearchResultsDataManager(storage: userDefaultsHelper))
+    func navigateToSearchMovies(isFavouriteMovieRemove: AnyObserver<Void>) {
+        let viewModel = SearchMoviesViewModel(searchDataProvider: SearchDataProvider(repository: MovieDemoRepository()), storeDataManager: FavouriteMoviesDataManager(storage: userDefaultsHelper), searchResultDataManager: SearchResultsDataManager(storage: userDefaultsHelper), isFavouriteMovieRemove: isFavouriteMovieRemove)
         let viewController = SearchMoviesViewController(viewModel: viewModel)
         root.pushViewController(viewController, animated: true)
         
@@ -62,7 +74,18 @@ extension MovieHomeCoordinator {
         }).disposed(by: disposeBag)
         
         viewModel.outputs.selectMovie.subscribe(onNext: {[weak self] movie in
-            print("result==", movie)
+            self?.navigateToMovieDetails(movie, reloadDataWhenFavouritDataUpdate: viewModel.inputs.reloadDataObserver )
+        }).disposed(by: disposeBag)
+    }
+    
+    func navigateToMovieDetails(_ movie: MovieResults, reloadDataWhenFavouritDataUpdate: AnyObserver<Void> ) {
+        
+        let viewModel = MovieDetailsViewModel(movie: movie, storeDataManager: FavouriteMoviesDataManager(storage: userDefaultsHelper), isFavouriteMovieRemove: reloadDataWhenFavouritDataUpdate)
+        let viewController = MovieDetailsViewController(viewModel: viewModel)
+        root.pushViewController(viewController, animated: true)
+        
+        viewModel.outputs.back.subscribe(onNext: {[weak self] _ in
+            self?.root.popViewController(animated: true)
         }).disposed(by: disposeBag)
     }
 }

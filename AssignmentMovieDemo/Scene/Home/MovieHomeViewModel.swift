@@ -14,6 +14,7 @@ protocol MovieHomeViewModelInputs {
     var actionFavouriteMoviesObserver: AnyObserver<Void>{ get }
     var actionSearchMoviesObserver: AnyObserver<Void>{ get }
     var isFavouriteMovieRemoveObserver: AnyObserver<Void>{ get }
+    var selectMovieObserver: AnyObserver<MovieResults>{ get }
 }
 
 protocol MovieHomeViewModelOutputs {
@@ -23,6 +24,7 @@ protocol MovieHomeViewModelOutputs {
     var dataSource: Observable<[SectionModel<Int, ReusableCollectionViewCellViewModelType>]> { get }
     var error: Observable<String>{ get }
     var isFavouriteMovieRemove: Observable<Void>{ get }
+    var selectMovie: Observable<MovieResults>{ get }
 }
 
 protocol MovieHomeViewModelType {
@@ -48,12 +50,14 @@ class MovieHomeViewModel: MovieHomeViewModelType, MovieHomeViewModelInputs, Movi
    private let moviesSubject = BehaviorSubject<[MovieResults]?>(value: nil)
    private let dataSourceSubject = BehaviorSubject<[SectionModel<Int, ReusableCollectionViewCellViewModelType>]>(value: [])
    private let isFavouriteMovieRemoveSubject = PublishSubject<Void>()
+    private let selectMovieSubject = PublishSubject<MovieResults>()
     
     //MARK: - Inputs
     var loadNextPageObserver: AnyObserver<Void>{ loadNextPageSubject.asObserver() }
     var actionFavouriteMoviesObserver: AnyObserver<Void>{ actionFavouriteMoviesSubject.asObserver() }
     var actionSearchMoviesObserver: AnyObserver<Void>{ actionSearchMoviesSubject.asObserver() }
     var isFavouriteMovieRemoveObserver: AnyObserver<Void>{ isFavouriteMovieRemoveSubject.asObserver() }
+    var selectMovieObserver: AnyObserver<MovieResults>{ selectMovieSubject.asObserver() }
     
     //MARK: - Outputs
     var error: Observable<String>{ errorSubject.asObservable() }
@@ -62,6 +66,7 @@ class MovieHomeViewModel: MovieHomeViewModelType, MovieHomeViewModelInputs, Movi
     var movies: Observable<[MovieResults]?>{ moviesSubject.asObservable() }
     var dataSource: Observable<[SectionModel<Int, ReusableCollectionViewCellViewModelType>]> { return dataSourceSubject.asObservable() }
     var isFavouriteMovieRemove: Observable<Void>{ isFavouriteMovieRemoveSubject.asObservable() }
+    var selectMovie: Observable<MovieResults>{ selectMovieSubject.asObservable() }
     
     //MARK: - Constructor/init
     init(storeDataManager: FavouriteMoviesDataManagerType, movieDataProvider: MovieDataProviderType) {
@@ -79,7 +84,7 @@ private extension MovieHomeViewModel {
     
     func makeCellViewModels() {
     
-        let cellViewModels = moviesSubject.unwrap().delay(.nanoseconds(1), scheduler: MainScheduler.instance)
+        let cellViewModels = moviesSubject.unwrap().delay(.nanoseconds(1000), scheduler: MainScheduler.asyncInstance)
             .map{ [unowned self] moviesList -> [ReusableCollectionViewCellViewModelType] in
                 
             let viewModels = moviesList.map { [unowned self] movieList -> ReusableCollectionViewCellViewModelType in

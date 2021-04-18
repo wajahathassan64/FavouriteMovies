@@ -22,4 +22,12 @@ extension UIView {
         subviews.forEach{ $0.layoutAllSubviews() }
         layoutSubviews()
     }
+    
+    func roundView(withBorderColor color: UIColor? = nil, withBorderWidth width: CGFloat? = nil) {
+        layer.cornerRadius = bounds.height/2
+        layer.borderWidth = width ?? 0
+        layer.borderColor = color?.cgColor ?? UIColor.clear.cgColor
+        layer.masksToBounds = false
+        clipsToBounds = true
+    }
 }

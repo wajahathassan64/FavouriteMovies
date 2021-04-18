@@ -105,6 +105,12 @@ fileprivate extension MovieHomeViewController {
         viewModel.outputs.dataSource.bind(to: collectionView.rx.items(dataSource: dataSource)).disposed(by: disposeBag)
         
         collectionView.rx.reachedBottom(offset: 100).bind(to: viewModel.inputs.loadNextPageObserver).disposed(by: disposeBag)
+        
+        collectionView.rx
+            .modelSelected(MovieCollectionViewCellViewModel.self)
+            .map{ $0.movieResult }
+            .bind(to: viewModel.inputs.selectMovieObserver)
+            .disposed(by: disposeBag)
     }
 }
 

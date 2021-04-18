@@ -28,13 +28,22 @@ struct MovieResults: Codable, Equatable {
         case title
     }
     
-    var posterImageUrl: String? {
+    private var posterImageUrl: String? {
         guard let path = posterPath else { return nil}
         return "https://image.tmdb.org/t/p/w185" + path /*92, 154, 185, 342, 500, 780*/
     }
     
     var posterImageWithUrl: ImageWithURL {
         return (posterImageUrl, title.initialsImage(color: UIColor.randomColor()))
+    }
+    
+    private var bannerImageUrl: String? {
+        guard let path = backdropPath else { return nil}
+        return "https://image.tmdb.org/t/p/w500" + path /*92, 154, 185, 342, 500, 780*/
+    }
+    
+    var bannerImageWithUrl: ImageWithURL {
+        return (bannerImageUrl, title.initialsImage(color: UIColor.randomColor()))
     }
     
     var formattedReleaseDate: String {

@@ -115,9 +115,9 @@ private extension MovieCollectionViewCell {
             .alignEdgesWithSuperview([.left, .right, .top, .bottom])
         
         favouriteIcon
-            .height(constant: 20)
-            .width(constant: 22)
-            .alignEdges([.bottom,. right], withView: posterImageView, constants: [2, 5])
+            .height(constant: 22)
+            .width(constant: 24)
+            .alignEdges([.bottom,. right], withView: posterImageView, constants: [8, 12])
         
     }
     

@@ -26,6 +26,28 @@ extension UIViewController {
     }
 }
 
+extension UIViewController {
+    public func addBackButton(tintColor: UIColor = .white) {
+        
+        let button = UIButton()
+        button.frame = CGRect(x: 0, y: 0, width: 35, height: 35)
+        button.setImage(UIImage(named: "icon_back")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        button.tintColor = tintColor
+        button.backgroundColor = .clear
+        button.layer.cornerRadius = 0.5 * button.bounds.size.width
+        button.addTarget(self, action: #selector(onTapBackButton), for: .touchUpInside)
+        
+        let backButton = UIBarButtonItem()
+        backButton.customView = button
+        navigationItem.leftBarButtonItem  = backButton
+        navigationController?.interactivePopGestureRecognizer?.delegate = nil
+    }
+    
+    @objc open func onTapBackButton() {
+        fatalError("Add back action in viewController")
+    }
+}
+
 extension Reactive where Base: UIViewController {
     var showErrorMessage: Binder<String> {
         return Binder(base) { viewController, error in
