@@ -110,7 +110,7 @@ private extension MovieCollectionViewCell {
             .topToBottom(posterImageView, constant: 4)
             .alignEdgesWithSuperview([.left, .right, .bottom], constants: [4, 4, 0])
             .centerHorizontallyInSuperview()
-            .height(.greaterThanOrEqualTo, constant: 22)
+            .height(constant: 22)
         
         containerView
             .alignEdgesWithSuperview([.left, .right, .top, .bottom])

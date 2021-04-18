@@ -227,6 +227,13 @@
 			path = SearchHistoryCell;
 			sourceTree = "<group>";
 		};
+		64229DA9262BD3CA00209C35 /* MovieDetails */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = MovieDetails;
+			sourceTree = "<group>";
+		};
 		644CFC7F2626199C006B0946 /* RxCells */ = {
 			isa = PBXGroup;
 			children = (
@@ -311,6 +318,7 @@
 		6467D8B926222DE000F56059 /* Scene */ = {
 			isa = PBXGroup;
 			children = (
+				64229DA9262BD3CA00209C35 /* MovieDetails */,
 				6482A1B826284ACD008D747A /* SearchMovies */,
 				640DC4322624E48B00672F23 /* FavouriteMovies */,
 				64D58EE92622F5A7000B8B91 /* Home */,
