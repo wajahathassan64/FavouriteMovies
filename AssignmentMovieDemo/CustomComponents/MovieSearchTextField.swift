@@ -13,6 +13,9 @@ import RxCocoa
 //This class not written by me.
 public class AppSearchTextField: UITextField {
     
+    // Mark: - Public properties
+    var editingDidEnd = PublishSubject<Void>()
+    
     // MARK: Initialization
     
     override init(frame: CGRect) {
@@ -32,6 +35,7 @@ public class AppSearchTextField: UITextField {
         imageView.contentMode = .center
         leftView = imageView
         leftViewMode = .always
+        delegate = self
         
     }
 }
@@ -64,6 +68,19 @@ extension AppSearchTextField {
         return CGRect(x: x, y: 0, width: bounds.height, height: bounds.height)
     }
 }
+
+
+extension AppSearchTextField: UITextFieldDelegate {
+    
+    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let textFieldRange = NSRange(location: 0, length: textField.text?.count ?? 0)
+        if NSEqualRanges(range, textFieldRange) && string.count == 0 {
+            editingDidEnd.onNext(())
+        }
+        return true
+    }
+}
+
 
 public extension Reactive where Base: AppSearchTextField {
     var search: ControlEvent<Void> { return base.rx.controlEvent(.editingDidEnd) }

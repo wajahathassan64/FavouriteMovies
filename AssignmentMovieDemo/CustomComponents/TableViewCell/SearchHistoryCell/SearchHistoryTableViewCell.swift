@@ -98,17 +98,18 @@ private extension SearchHistoryTableViewCell {
     
     func setupConstraints() {
         stackView
-            .height(.greaterThanOrEqualTo, constant: 22)
             .alignEdgesWithSuperview([.left, .right, .top, .bottom], constants: [15, 10, 0, 10])
         
         iconHistory
             .width(constant: 22)
             .height(constant: 22)
-            .alignEdgesWithSuperview([.left, .top, .bottom], constant: 10)
+            .centerVerticallyInSuperview()
+            .alignEdgeWithSuperview(.left, constant: 10)
         
         title
             .centerVerticallyInSuperview()
             .toRightOf(iconHistory, constant: 10)
+            .alignEdgesWithSuperview([.right, .top, .bottom], constants: [10, 10, 10])
     }
 }
 

@@ -44,6 +44,7 @@ class SearchMoviesViewController: KeyboardAvoidingViewController {
         NSAttributedString(string: "Search",
         attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray])
         textField.clipsToBounds = false
+        textField.autocorrectionType = .no
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -102,6 +103,7 @@ fileprivate extension SearchMoviesViewController {
         
         tableView.register(MovieTableViewCell.self, forCellReuseIdentifier: MovieTableViewCell.reuseIdentifier)
         tableView.register(NoSearchResultCell.self, forCellReuseIdentifier: NoSearchResultCell.reuseIdentifier)
+        tableView.register(SearchHistoryTableViewCell.self, forCellReuseIdentifier: SearchHistoryTableViewCell.reuseIdentifier)
     }
     
     func setupConstraints() {
@@ -137,26 +139,41 @@ fileprivate extension SearchMoviesViewController {
         
         viewModel.outputs.error.bind(to: rx.showErrorMessage).disposed(by: disposeBag)
         
-//        viewModel.outputs.reloadMovieData.subscribe(onNext: {[weak self] _ in
-//            self?.tableView.reloadData()
-//        }).disposed(by: disposeBag)
+        searchBar.rx.search.bind(to: viewModel.inputs.onTapSearchButtonObserver).disposed(by: disposeBag)
+        searchBar.editingDidEnd.bind(to: viewModel.inputs.emptyStringObserver).disposed(by: disposeBag)
+        
     }
+    
     func bindTableView() {
         dataSource = RxTableViewSectionedReloadDataSource(configureCell: { (_, tableView, _, viewModel) in
             let cell = tableView.dequeueReusableCell(withIdentifier: viewModel.reusableIdentifier) as! RxUITableViewCell
             cell.configure(with: viewModel)
             return cell
         })
-        
         viewModel.outputs.dataSource.bind(to: tableView.rx.items(dataSource: dataSource)).disposed(by: disposeBag)
         tableView.rx.reachedBottom().bind(to: viewModel.inputs.loadNextPageObserver).disposed(by: disposeBag)
-        tableView.rx.modelSelected(MovieTableViewCellViewModelViewModel.self)
+        
+        tableView.rx
+            .modelSelected(ReusableTableViewCellViewModelType.self)
+            .filter{ $0 is MovieTableViewCellViewModelType }
+            .map { ($0 as! MovieTableViewCellViewModel) }
             .do(onNext: { [weak self] _ in
                 self?.searchBar.resignFirstResponder()
                 self?.view.endEditing(true)
             })
             .map { $0.movieResult }
             .bind(to: viewModel.inputs.selectMovieObserver)
+            .disposed(by: disposeBag)
+        
+        tableView.rx
+            .modelSelected(ReusableTableViewCellViewModelType.self)
+            .filter{ $0 is SearchHistoryTableViewCellViewModelType }
+            .map{ $0 as! SearchHistoryTableViewCellViewModel }
+            .map{ $0.query }
+            .subscribe(onNext: {[weak self] query in
+                self?.searchBar.text = query
+                self?.searchBar.sendActions(for: .valueChanged)
+            })
             .disposed(by: disposeBag)
         
     }
