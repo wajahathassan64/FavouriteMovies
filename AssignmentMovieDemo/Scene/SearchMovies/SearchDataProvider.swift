@@ -7,7 +7,9 @@
 import RxSwift
 
 class SearchDataProvider: SearchDataProviderType {
+    
     //MARK: - Properties
+    
     private var repository: MovieDemoRepository
     private let disposeBag = DisposeBag()
     private var currentPage: Int
@@ -20,13 +22,16 @@ class SearchDataProvider: SearchDataProviderType {
     let fetchSubject = PublishSubject<Void>()
     var searchMovieSubject = BehaviorSubject<String?>(value: nil)
     var searchQuery = ""
-    var reloadDataSubject = PublishSubject<Void>()
+    var refreshDataSourceSubject = PublishSubject<Void>()
+    var resetDataSourceSubject = PublishSubject<Void>()
     
     init(repository: MovieDemoRepository) {
         self.repository = repository
         currentPage = 0
         totalPages = 1
         searchMovies()
+        resetDataSource()
+        refreshDataSource()
     }
     
     func searchMovies() {
@@ -57,8 +62,18 @@ class SearchDataProvider: SearchDataProviderType {
         
         request.errors().map{ $0.localizedDescription }.bind(to: errorSubject).disposed(by: disposeBag)
         
-        reloadDataSubject.subscribe(onNext: {[weak self] _ in
-            self?.moviesSubject.onNext(self?.moviesListContainer)
+    }
+    
+    private func resetDataSource() {
+        resetDataSourceSubject.subscribe(onNext: {[unowned self] _ in
+            self.moviesListContainer = []
+            self.currentPage = 0
+        }).disposed(by: disposeBag)
+    }
+    
+    private func refreshDataSource() {
+        refreshDataSourceSubject.subscribe(onNext: {[unowned self] _ in
+            self.moviesSubject.onNext(self.moviesListContainer)
         }).disposed(by: disposeBag)
     }
     

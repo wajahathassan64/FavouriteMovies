@@ -14,6 +14,8 @@ protocol SearchMoviesViewModelInputs {
     var cancelObserver: AnyObserver<Void>{ get }
     var searchInputTextObserver: AnyObserver<String?>{ get }
     var selectMovieObserver: AnyObserver<MovieResults>{ get }
+    var onTapSearchButtonObserver: AnyObserver<Void>{ get }
+    var emptyStringObserver: AnyObserver<Void>{ get }
 }
 
 protocol SearchMoviesViewModelOutputs {
@@ -34,6 +36,7 @@ class SearchMoviesViewModel: SearchMoviesViewModelType, SearchMoviesViewModelInp
     //MARK: - Properties
     let disposeBag = DisposeBag()
     let storeDataManager: FavouriteMoviesDataManagerType
+    let searchResultDataManager: SearchResultsDataManagerType
     let searchDataProvider: SearchDataProviderType
     var inputs: SearchMoviesViewModelInputs { return self }
     var outputs: SearchMoviesViewModelOutputs { return self }
@@ -45,13 +48,17 @@ class SearchMoviesViewModel: SearchMoviesViewModelType, SearchMoviesViewModelInp
     private let selectMovieSubject = PublishSubject<MovieResults>()
     private let moviesSubject = BehaviorSubject<[MovieResults]?>(value: nil)
     private let reloadMovieSubject = PublishSubject<Void>()
+    private let onTapSearchButtonSubject = PublishSubject<Void>()
+    private let searchResultsSubject = PublishSubject<[String]?>()
+    private let emptyStringSubject = PublishSubject<Void>()
     private let dataSourceSubject = BehaviorSubject<[SectionModel<Int, ReusableTableViewCellViewModelType>]>(value: [])
     
     //MARK: - Inputs
     var selectMovieObserver: AnyObserver<MovieResults>{ selectMovieSubject.asObserver() }
     var cancelObserver: AnyObserver<Void>{ cancelSubject.asObserver() }
+    var emptyStringObserver: AnyObserver<Void>{ emptyStringSubject.asObserver() }
     var searchInputTextObserver: AnyObserver<String?>{ searchInputTextSubject.asObserver() }
-    
+    var onTapSearchButtonObserver: AnyObserver<Void>{ onTapSearchButtonSubject.asObserver() }
     //MARK: - Outputs
     var error: Observable<String> { errorSubject.asObservable() }
     var cancel: Observable<Void>{ cancelSubject.asObservable() }
@@ -61,11 +68,15 @@ class SearchMoviesViewModel: SearchMoviesViewModelType, SearchMoviesViewModelInp
     var dataSource: Observable<[SectionModel<Int, ReusableTableViewCellViewModelType>]> { return dataSourceSubject.asObservable() }
     
     //MARK: - Constructor/init
-    init(searchDataProvider: SearchDataProviderType, storeDataManager: FavouriteMoviesDataManagerType) {
+    init(searchDataProvider: SearchDataProviderType, storeDataManager: FavouriteMoviesDataManagerType, searchResultDataManager: SearchResultsDataManagerType) {
         self.searchDataProvider = searchDataProvider
         self.storeDataManager = storeDataManager
+        self.searchResultDataManager = searchResultDataManager
         makeCellViewModels()
         initialiseMoviesSubjetc()
+        storeSearchResults()
+        getSearchResults()
+        initEmptyStringObserver()
     }
     
 }
@@ -76,7 +87,7 @@ private extension SearchMoviesViewModel {
             .map{ moviesList -> [ReusableTableViewCellViewModelType] in
                 
                 let viewModels = moviesList.map { [unowned self] movieList -> ReusableTableViewCellViewModelType in
-                    let viewModel = MovieTableViewCellViewModelViewModel(movieResult: movieList)
+                    let viewModel = MovieTableViewCellViewModel(movieResult: movieList)
                     
                     viewModel.outputs.favourite.subscribe(onNext:{[weak self] movie in
                         self?.storeDataManager.storeFavouriteMovie(movie: movie)
@@ -93,38 +104,72 @@ private extension SearchMoviesViewModel {
                 return viewModels
             }
         
-        let noResults = moviesSubject.delay(.nanoseconds(100), scheduler: MainScheduler.instance).filter { $0?.count == 0 }.map{ moviesList -> [ReusableTableViewCellViewModelType] in
+        let noResults = moviesSubject
+            .delay(.nanoseconds(100), scheduler: MainScheduler.instance)
+            .filter { $0?.count == 0 }
+            .map{ moviesList -> [ReusableTableViewCellViewModelType] in
             let viewModels = moviesList.map { _ -> [ReusableTableViewCellViewModelType] in
                 return [NoSearchResultCellViewModel()]
             }
             return viewModels ?? []
         }
         
-        Observable.merge(cellViewModels, noResults)
+        let searchHistory = searchResultsSubject
+            .delay(.nanoseconds(100), scheduler: MainScheduler.instance)
+            .map{ results -> [ReusableTableViewCellViewModelType] in
+            let viewModels = results.map { results -> [ReusableTableViewCellViewModelType] in
+                var viewModel = [ReusableTableViewCellViewModelType]()
+                for i in 0..<results.count {
+                    viewModel.append(SearchHistoryTableViewCellViewModel(query: results[i], isHideHeading: i == 0 ? false : true))
+                }
+                return viewModel
+            }
+            return viewModels ?? []
+        }
+        
+        Observable.merge(cellViewModels, noResults, searchHistory)
             .map { [SectionModel(model: 1, items: $0)]}
             .bind(to: dataSourceSubject)
             .disposed(by: disposeBag)
         
-//        cellViewModels
-//            .map { [SectionModel(model: 1, items: $0)]}
-//            .bind(to: dataSourceSubject)
-//            .disposed(by: disposeBag)
-        
     }
 
     func initialiseMoviesSubjetc() {
-        
         loadNextPageSubject.subscribe(onNext: {[unowned self] _ in
             guard !self.searchDataProvider.isLastPage() else { return }
             self.searchDataProvider.fetchSubject.onNext(())
         }).disposed(by: disposeBag)
         
         reloadMovieData.subscribe(onNext: {[unowned self] _ in
-            self.searchDataProvider.reloadDataSubject.onNext(())
+            self.searchDataProvider.refreshDataSourceSubject.onNext(())
         }).disposed(by: disposeBag)
         
         searchInputTextSubject.unwrap().debounce(.seconds(1), scheduler: MainScheduler.instance).bind(to: searchDataProvider.searchMovieSubject).disposed(by: disposeBag)
         searchDataProvider.result.bind(to: moviesSubject).disposed(by: disposeBag)
         searchDataProvider.error.bind(to: errorSubject).disposed(by: disposeBag)
+    }
+    
+    func storeSearchResults() {
+        onTapSearchButtonSubject.withLatestFrom(Observable.combineLatest(searchInputTextSubject, moviesSubject.unwrap()))
+            .map{ return $0.1.count > 0 ? $0.0 : nil }
+            .unwrap()
+            .filter{ $0 != "" }
+            .subscribe(onNext: {[weak self] inputString in
+            self?.searchResultDataManager.storeSearchQuery(query: inputString)
+        }).disposed(by: disposeBag)
+    }
+    
+    func getSearchResults() {
+        if let searchResults = searchResultDataManager.fetchSearchResuls() {
+            searchResultsSubject.onNext(searchResults.reversed())
+        }
+    }
+    
+    func initEmptyStringObserver() {
+        emptyStringSubject.subscribe(onNext: {[weak self] _ in
+            self?.searchDataProvider.resetDataSourceSubject.onNext(())
+            self?.moviesSubject.onNext([])
+            self?.getSearchResults()
+        }).disposed(by: disposeBag)
     }
 }

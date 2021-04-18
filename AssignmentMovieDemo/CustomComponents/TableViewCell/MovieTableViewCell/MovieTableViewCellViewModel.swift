@@ -26,7 +26,7 @@ protocol MovieTableViewCellViewModelType {
     var outputs: MovieTableViewCellViewModelOutputs { get }
 }
 
-class MovieTableViewCellViewModelViewModel: ReusableTableViewCellViewModelType, MovieTableViewCellViewModelType, MovieTableViewCellViewModelInputs, MovieTableViewCellViewModelOutputs {
+class MovieTableViewCellViewModel: ReusableTableViewCellViewModelType, MovieTableViewCellViewModelType, MovieTableViewCellViewModelInputs, MovieTableViewCellViewModelOutputs {
     
     var inputs: MovieTableViewCellViewModelInputs { return self }
     var outputs: MovieTableViewCellViewModelOutputs { return self }
@@ -68,7 +68,7 @@ class MovieTableViewCellViewModelViewModel: ReusableTableViewCellViewModelType, 
     
 }
 
-extension MovieTableViewCellViewModelViewModel {
+extension MovieTableViewCellViewModel {
     var posterImageUrl: String? {
         guard let path = movieResult.posterPath else { return nil}
         return "https://image.tmdb.org/t/p/w342" + path

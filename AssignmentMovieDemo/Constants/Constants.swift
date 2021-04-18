@@ -8,6 +8,7 @@
 
 enum Keys {
     case favouriteMovie
+    case searchResult
 }
 
 extension Keys {
@@ -15,6 +16,8 @@ extension Keys {
         switch self {
         case .favouriteMovie:
             return "FAVOURITE_MOVIE"
+        case .searchResult:
+            return "SEARCH_RESULT"
         }
     }
 }

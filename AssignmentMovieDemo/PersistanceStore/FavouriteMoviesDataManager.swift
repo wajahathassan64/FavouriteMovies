@@ -8,9 +8,12 @@
 import Foundation
 import RxSwift
 
-protocol FavouriteMoviesDataManagerType {
+protocol FavouriteMoviesDataManagerType: CommonProtocolType {
     func storeFavouriteMovie(movie: MovieResults)
     func fetchFavouriteMovie() -> [MovieResults]?
+}
+
+protocol CommonProtocolType {
     var successSubject: PublishSubject<Void>{ get }
 }
 

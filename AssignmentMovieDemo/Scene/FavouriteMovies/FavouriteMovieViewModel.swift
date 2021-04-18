@@ -60,7 +60,7 @@ private extension FavouriteMovieViewModel {
         let cellViewModels = moviesSubject.unwrap().delay(.nanoseconds(100), scheduler: MainScheduler.instance)
             .map{ [unowned self] moviesList -> [ReusableTableViewCellViewModelType] in
             let viewModels = moviesList.map { [unowned self] movieList -> ReusableTableViewCellViewModelType in
-                let viewModel = MovieTableViewCellViewModelViewModel(movieResult: movieList)
+                let viewModel = MovieTableViewCellViewModel(movieResult: movieList)
                 
                 viewModel.outputs.favourite.subscribe(onNext:{[weak self] movie in
                     self?.storeDataManager.storeFavouriteMovie(movie: movie)

@@ -7,6 +7,8 @@
 
 import Foundation
 import UIKit
+import RxSwift
+import RxCocoa
 
 //This class not written by me.
 public class AppSearchTextField: UITextField {
@@ -61,4 +63,8 @@ extension AppSearchTextField {
         
         return CGRect(x: x, y: 0, width: bounds.height, height: bounds.height)
     }
+}
+
+public extension Reactive where Base: AppSearchTextField {
+    var search: ControlEvent<Void> { return base.rx.controlEvent(.editingDidEnd) }
 }
