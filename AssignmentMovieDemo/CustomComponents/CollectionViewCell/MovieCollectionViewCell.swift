@@ -50,7 +50,6 @@ class MovieCollectionViewCell: RxUICollectionViewCell {
     }()
     
     // MARK: Initialization
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         clipsToBounds = true

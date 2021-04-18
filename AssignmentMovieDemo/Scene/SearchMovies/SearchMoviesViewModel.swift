@@ -73,7 +73,7 @@ class SearchMoviesViewModel: SearchMoviesViewModelType, SearchMoviesViewModelInp
         self.storeDataManager = storeDataManager
         self.searchResultDataManager = searchResultDataManager
         makeCellViewModels()
-        initialiseMoviesSubjetc()
+        searchMoviesCoreSubjects()
         storeSearchResults()
         getSearchResults()
         initEmptyStringObserver()
@@ -108,24 +108,24 @@ private extension SearchMoviesViewModel {
             .delay(.nanoseconds(100), scheduler: MainScheduler.instance)
             .filter { $0?.count == 0 }
             .map{ moviesList -> [ReusableTableViewCellViewModelType] in
-            let viewModels = moviesList.map { _ -> [ReusableTableViewCellViewModelType] in
-                return [NoSearchResultCellViewModel()]
+                let viewModels = moviesList.map { _ -> [ReusableTableViewCellViewModelType] in
+                    return [NoSearchResultCellViewModel()]
+                }
+                return viewModels ?? []
             }
-            return viewModels ?? []
-        }
         
         let searchHistory = searchResultsSubject
             .delay(.nanoseconds(100), scheduler: MainScheduler.instance)
             .map{ results -> [ReusableTableViewCellViewModelType] in
-            let viewModels = results.map { results -> [ReusableTableViewCellViewModelType] in
-                var viewModel = [ReusableTableViewCellViewModelType]()
-                for i in 0..<results.count {
-                    viewModel.append(SearchHistoryTableViewCellViewModel(query: results[i], isHideHeading: i == 0 ? false : true))
+                let viewModels = results.map { results -> [ReusableTableViewCellViewModelType] in
+                    var viewModel = [ReusableTableViewCellViewModelType]()
+                    for i in 0..<results.count {
+                        viewModel.append(SearchHistoryTableViewCellViewModel(query: results[i], isHideHeading: i == 0 ? false : true))
+                    }
+                    return viewModel
                 }
-                return viewModel
+                return viewModels ?? []
             }
-            return viewModels ?? []
-        }
         
         Observable.merge(cellViewModels, noResults, searchHistory)
             .map { [SectionModel(model: 1, items: $0)]}
@@ -133,8 +133,8 @@ private extension SearchMoviesViewModel {
             .disposed(by: disposeBag)
         
     }
-
-    func initialiseMoviesSubjetc() {
+    
+    func searchMoviesCoreSubjects() {
         loadNextPageSubject.subscribe(onNext: {[unowned self] _ in
             guard !self.searchDataProvider.isLastPage() else { return }
             self.searchDataProvider.fetchSubject.onNext(())
@@ -144,8 +144,14 @@ private extension SearchMoviesViewModel {
             self.searchDataProvider.refreshDataSourceSubject.onNext(())
         }).disposed(by: disposeBag)
         
-        searchInputTextSubject.unwrap().debounce(.seconds(1), scheduler: MainScheduler.instance).bind(to: searchDataProvider.searchMovieSubject).disposed(by: disposeBag)
+        searchInputTextSubject
+            .unwrap()
+            .debounce(.seconds(1), scheduler: MainScheduler.instance)
+            .bind(to: searchDataProvider.searchMovieSubject)
+            .disposed(by: disposeBag)
+        
         searchDataProvider.result.bind(to: moviesSubject).disposed(by: disposeBag)
+        
         searchDataProvider.error.bind(to: errorSubject).disposed(by: disposeBag)
     }
     
@@ -155,14 +161,13 @@ private extension SearchMoviesViewModel {
             .unwrap()
             .filter{ $0 != "" }
             .subscribe(onNext: {[weak self] inputString in
-            self?.searchResultDataManager.storeSearchQuery(query: inputString)
-        }).disposed(by: disposeBag)
+                self?.searchResultDataManager.storeSearchQuery(query: inputString)
+            }).disposed(by: disposeBag)
     }
     
     func getSearchResults() {
-        if let searchResults = searchResultDataManager.fetchSearchResuls() {
-            searchResultsSubject.onNext(searchResults.reversed())
-        }
+        guard let searchResults = searchResultDataManager.fetchSearchResuls() else { return }
+        searchResultsSubject.onNext(searchResults.reversed())
     }
     
     func initEmptyStringObserver() {

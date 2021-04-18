@@ -57,7 +57,6 @@ class MovieCollectionViewCellViewModel: ReusableCollectionViewCellViewModelType,
     var isFavouriteIcon: Observable<Bool>{ isFavouriteIconSubject.asObservable() }
     
     //MARK: - Constructor/init
-    
     init(movieResult: MovieResults) {
         self.movieResult = movieResult
         posterUrlSubject = BehaviorSubject(value: movieResult.posterImageWithUrl)

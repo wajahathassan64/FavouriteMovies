@@ -47,19 +47,15 @@ class FavouriteMoviesDataManager: FavouriteMoviesDataManagerType {
     }
     
     private func save(data: [MovieResults]) {
-        if let encode = try? JSONParser.encode(value: data) {
-            self.storage.setData(value: encode, key: Keys.favouriteMovie.localize)
-            successSubject.onNext(())
-        }
+        guard let encode = try? JSONParser.encode(value: data) else { return }
+        self.storage.setData(value: encode, key: Keys.favouriteMovie.localize)
+        successSubject.onNext(())
     }
     
     func fetchFavouriteMovie() -> [MovieResults]? {
-        if let data = self.storage.getData(type: Data.self, forkey:  Keys.favouriteMovie.localize) {
-            if let loadedData = try? JSONParser.decode(value: data) as [MovieResults] {
-                return loadedData
-            }
-        }
-        return nil
+        guard let data = self.storage.getData(type: Data.self, forkey:  Keys.favouriteMovie.localize) else { return nil }
+        guard let loadedData = try? JSONParser.decode(value: data) as [MovieResults] else { return nil }
+        return loadedData
     }
     
     private func removeFavouriteMovie() {

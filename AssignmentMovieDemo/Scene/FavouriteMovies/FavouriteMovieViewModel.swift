@@ -9,9 +9,7 @@ import Foundation
 import RxSwift
 import RxDataSources
 
-protocol FavouriteMovieViewModelInputs {
-    
-}
+protocol FavouriteMovieViewModelInputs { }
 
 protocol FavouriteMovieViewModelOutputs {
     var movies: Observable<[MovieResults]?>{ get }
@@ -52,29 +50,28 @@ class FavouriteMovieViewModel: FavouriteMovieViewModelType, FavouriteMovieViewMo
         fetchMovieListdb()
         refreshCellViewModels()
     }
-    
 }
 
 private extension FavouriteMovieViewModel {
     func makeCellViewModels() {
         let cellViewModels = moviesSubject.unwrap().delay(.nanoseconds(100), scheduler: MainScheduler.instance)
             .map{ [unowned self] moviesList -> [ReusableTableViewCellViewModelType] in
-            let viewModels = moviesList.map { [unowned self] movieList -> ReusableTableViewCellViewModelType in
-                let viewModel = MovieTableViewCellViewModel(movieResult: movieList)
-                
-                viewModel.outputs.favourite.subscribe(onNext:{[weak self] movie in
-                    self?.storeDataManager.storeFavouriteMovie(movie: movie)
-                }).disposed(by: disposeBag)
-                
-                if let movies = storeDataManager.fetchFavouriteMovie() {
-                    let isFavourite = movies.filter{ $0.id == viewModel.movieResult.id }.first.map{ _ in true  }
-                    viewModel.inputs.isFavouriteIconObserver.onNext(isFavourite ?? false)
+                let viewModels = moviesList.map { [unowned self] movieList -> ReusableTableViewCellViewModelType in
+                    let viewModel = MovieTableViewCellViewModel(movieResult: movieList)
+                    
+                    viewModel.outputs.favourite.subscribe(onNext:{[weak self] movie in
+                        self?.storeDataManager.storeFavouriteMovie(movie: movie)
+                    }).disposed(by: disposeBag)
+                    
+                    if let movies = storeDataManager.fetchFavouriteMovie() {
+                        let isFavourite = movies.filter{ $0.id == viewModel.movieResult.id }.first.map{ _ in true  }
+                        viewModel.inputs.isFavouriteIconObserver.onNext(isFavourite ?? false)
+                    }
+                    
+                    return viewModel
                 }
-                
-                return viewModel
+                return viewModels
             }
-            return viewModels
-        }
         
         cellViewModels
             .map { [SectionModel(model: 1, items: $0)]}
@@ -84,9 +81,8 @@ private extension FavouriteMovieViewModel {
     }
     
     func fetchMovieListdb() {
-        if let movies = storeDataManager.fetchFavouriteMovie() {
-            moviesSubject.onNext(movies.reversed())
-        }
+        guard let movies = storeDataManager.fetchFavouriteMovie() else { return }
+        moviesSubject.onNext(movies.reversed())
     }
     
     func refreshCellViewModels() {

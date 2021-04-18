@@ -8,7 +8,7 @@
 import Foundation
 import RxSwift
 
-class MovieDemoService  {
+class MovieService  {
     
     private let apiClient: WebClient
     private let apiKey : String

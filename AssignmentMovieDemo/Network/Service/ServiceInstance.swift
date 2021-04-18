@@ -8,7 +8,7 @@
 import Foundation
 
 public class ServiceInstance {
-    lazy var moviewDemoService: MovieDemoService = {
-        return MovieDemoService()
+    lazy var movieService: MovieService = {
+        return MovieService()
     }()
 }

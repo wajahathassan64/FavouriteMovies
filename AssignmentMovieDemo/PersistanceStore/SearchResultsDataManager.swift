@@ -33,29 +33,21 @@ class SearchResultsDataManager: SearchResultsDataManagerType {
                     data.append(query)
                     save(data: data)
                     
-                }else{
-                    data.append(query)
-                    save(data: data)
-                }
+                }else{ data.append(query); save(data: data) }
             }
-        }else {
-            save(data: [query])
-        }
+        }else { save(data: [query]) }
     }
     
+    
     private func save(data: [String]) {
-        if let encode = try? JSONParser.encode(value: data) {
-            self.storage.setData(value: encode, key: Keys.searchResult.localize)
-        }
+        guard let encode = try? JSONParser.encode(value: data) else { return }
+        self.storage.setData(value: encode, key: Keys.searchResult.localize)
     }
     
     func fetchSearchResuls() -> [String]? {
-        if let data = self.storage.getData(type: Data.self, forkey:  Keys.searchResult.localize) {
-            if let loadedData = try? JSONParser.decode(value: data) as [String] {
-                return loadedData
-            }
-        }
-        return nil
+        guard let data = self.storage.getData(type: Data.self, forkey:  Keys.searchResult.localize) else { return nil }
+        guard let storedData = try? JSONParser.decode(value: data) as [String] else { return nil }
+        return storedData
     }
     
     private func resetSearchResults() {

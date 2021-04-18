@@ -29,7 +29,6 @@ class MovieHomeCoordinator: Coordinator<ResultType<ResultType<Void>>> {
         root = UINavigationController(rootViewController: viewController)
         root.navigationBar.barStyle = UIBarStyle.black
         root.navigationBar.tintColor = UIColor.white
-//        root.navigationBar.barTintColor = .black
         window.rootViewController = root
         window.makeKeyAndVisible()
         

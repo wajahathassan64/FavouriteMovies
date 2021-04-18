@@ -55,11 +55,9 @@ class SearchHistoryTableViewCell: RxUITableViewCell {
     private lazy var stackView = UIStackViewFactory.createStackView(with: .vertical, alignment: .fill, distribution: .fill, spacing: 10, arrangedSubviews: [heading, containerView])
     
     // MARK: Properties
-    
     private var viewModel: SearchHistoryTableViewCellViewModelType!
     
     // MARK: Initialization
-    
     override public init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         commonInit()
@@ -78,7 +76,6 @@ class SearchHistoryTableViewCell: RxUITableViewCell {
     }
     
     // MARK: Configurations
-    
     override func configure(with viewModel: Any) {
         guard let viewModel = viewModel as? SearchHistoryTableViewCellViewModelType else { return }
         self.viewModel = viewModel
@@ -114,7 +111,6 @@ private extension SearchHistoryTableViewCell {
 }
 
 // MARK: - Binding
-
 private extension SearchHistoryTableViewCell {
     func bindView(with viewModel: SearchHistoryTableViewCellViewModelType) {
         viewModel.outputs.title.bind(to: title.rx.text).disposed(by: disposeBag)

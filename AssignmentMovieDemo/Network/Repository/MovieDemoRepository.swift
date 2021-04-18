@@ -16,11 +16,11 @@ protocol MovieDemoRepositoryType {
 class MovieDemoRepository: ServiceInstance, MovieDemoRepositoryType {
     
     func getMovies(pageNumber: Int) -> Observable<Event<Movies?>> {
-        return moviewDemoService.getMovies(pageNumber: pageNumber).materialize()
+        return movieService.getMovies(pageNumber: pageNumber).materialize()
     }
     
     func searchMovies(searchText: String, pageNumber: Int)  -> Observable<Event<Movies?>> {
-        return moviewDemoService.searchMovie(searchText: searchText, pageNumber: pageNumber).materialize()
+        return movieService.searchMovie(searchText: searchText, pageNumber: pageNumber).materialize()
     }
     
 }
