@@ -26,7 +26,7 @@
 <li> pod 'WHCustomizeConstraint'</li>
 </ul>
 
-## Design Patterns
+## Design Patterns - Architectural and Non Architectural
 
 <ul>
 <li>MVVM - C</li>
