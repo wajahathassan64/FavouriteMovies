@@ -29,7 +29,7 @@
 ## Limitation
 
 <ul>
-<li>Due to heavy data loading after 600 'Movie Data Object' application may slow down or even it may crash.</li>
+<li>Due to heavy data loading after 600 "Movie Data Objects" application may slow down or even it may crash.</li>
 </ul>
 
 ## Author
