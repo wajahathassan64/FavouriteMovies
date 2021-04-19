@@ -37,6 +37,12 @@
 <li>Strategy</li>
 </ul>
 
+## Limitation
+
+<ul>
+<li>Due to heavy data loading after 600 "Movie Data Objects" application may slow down or even it may crash.</li>
+</ul>
+
 ## Author
 
 wajahathassan64, wajahathassan64@gmail.com
