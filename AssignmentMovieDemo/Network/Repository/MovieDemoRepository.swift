@@ -13,7 +13,7 @@ protocol MovieDemoRepositoryType {
     func searchMovies(searchText: String, pageNumber: Int) -> Observable<Event<Movies?>>
 }
 
-class MovieDemoRepository: ServiceInstance, MovieDemoRepositoryType {
+class MovieDemoRepository: Microservices, MovieDemoRepositoryType {
     
     func getMovies(pageNumber: Int) -> Observable<Event<Movies?>> {
         return movieService.getMovies(pageNumber: pageNumber).materialize()

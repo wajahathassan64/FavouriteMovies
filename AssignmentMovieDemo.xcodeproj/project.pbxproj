@@ -51,7 +51,7 @@
 		64D58F0C2622FBA9000B8B91 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64D58F0B2622FBA9000B8B91 /* Result.swift */; };
 		64D58F182622FDD7000B8B91 /* Movies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64D58F172622FDD7000B8B91 /* Movies.swift */; };
 		64D58F1D2622FDEA000B8B91 /* MovieResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64D58F1C2622FDEA000B8B91 /* MovieResults.swift */; };
-		64D58F2E26230060000B8B91 /* ServiceInstance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64D58F2D26230060000B8B91 /* ServiceInstance.swift */; };
+		64D58F2E26230060000B8B91 /* Microservices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64D58F2D26230060000B8B91 /* Microservices.swift */; };
 		64D58F412623080F000B8B91 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64D58F402623080F000B8B91 /* AppCoordinator.swift */; };
 		64D58F7726231E61000B8B91 /* UserDefaultsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64D58F7626231E61000B8B91 /* UserDefaultsHelper.swift */; };
 		64D58F7F262357FB000B8B91 /* MovieDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64D58F7E262357FB000B8B91 /* MovieDataProvider.swift */; };
@@ -137,7 +137,7 @@
 		64D58F0B2622FBA9000B8B91 /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		64D58F172622FDD7000B8B91 /* Movies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movies.swift; sourceTree = "<group>"; };
 		64D58F1C2622FDEA000B8B91 /* MovieResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieResults.swift; sourceTree = "<group>"; };
-		64D58F2D26230060000B8B91 /* ServiceInstance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceInstance.swift; sourceTree = "<group>"; };
+		64D58F2D26230060000B8B91 /* Microservices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Microservices.swift; sourceTree = "<group>"; };
 		64D58F402623080F000B8B91 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		64D58F7626231E61000B8B91 /* UserDefaultsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsHelper.swift; sourceTree = "<group>"; };
 		64D58F7E262357FB000B8B91 /* MovieDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDataProvider.swift; sourceTree = "<group>"; };
@@ -423,7 +423,7 @@
 		64D58F8D26235B95000B8B91 /* Service */ = {
 			isa = PBXGroup;
 			children = (
-				64D58F2D26230060000B8B91 /* ServiceInstance.swift */,
+				64D58F2D26230060000B8B91 /* Microservices.swift */,
 				6467D8F62622D26700F56059 /* MovieService.swift */,
 			);
 			path = Service;
@@ -754,7 +754,7 @@
 				64D58F412623080F000B8B91 /* AppCoordinator.swift in Sources */,
 				64B8739A262C51AD009C8AC0 /* MoviewDetailsViewController.swift in Sources */,
 				64229D7B262A5C2E00209C35 /* NoSearchResultCellViewModel.swift in Sources */,
-				64D58F2E26230060000B8B91 /* ServiceInstance.swift in Sources */,
+				64D58F2E26230060000B8B91 /* Microservices.swift in Sources */,
 				647C20BE2628B37C00C2C4AE /* SearchDataProviderType.swift in Sources */,
 				6467D8CB2622308200F56059 /* Coordinator.swift in Sources */,
 				64D58F7726231E61000B8B91 /* UserDefaultsHelper.swift in Sources */,

@@ -37,37 +37,38 @@ class SearchMoviesViewModel: SearchMoviesViewModelType, SearchMoviesViewModelInp
     //MARK: - Properties
     let disposeBag = DisposeBag()
     var isFavouriteMovieRemove: AnyObserver<Void>
+    let searchDataProvider: SearchDataProviderType
     let storeDataManager: FavouriteMoviesDataManagerType
     let searchResultDataManager: SearchResultsDataManagerType
-    let searchDataProvider: SearchDataProviderType
     var inputs: SearchMoviesViewModelInputs { return self }
     var outputs: SearchMoviesViewModelOutputs { return self }
     
-    private let errorSubject = PublishSubject<String>()
     private let cancelSubject = PublishSubject<Void>()
+    private let errorSubject = PublishSubject<String>()
+    private let reloadDataSubject = PublishSubject<Void>()
+    private let emptyStringSubject = PublishSubject<Void>()
     private let loadNextPageSubject = PublishSubject<Void>()
+    private let onTapSearchButtonSubject = PublishSubject<Void>()
     private let searchInputTextSubject = PublishSubject<String?>()
+    private let searchResultsSubject = PublishSubject<[String]?>()
     private let selectMovieSubject = PublishSubject<MovieResults>()
     private let moviesSubject = BehaviorSubject<[MovieResults]?>(value: nil)
-    private let reloadDataSubject = PublishSubject<Void>()
-    private let onTapSearchButtonSubject = PublishSubject<Void>()
-    private let searchResultsSubject = PublishSubject<[String]?>()
-    private let emptyStringSubject = PublishSubject<Void>()
     private let dataSourceSubject = BehaviorSubject<[SectionModel<Int, ReusableTableViewCellViewModelType>]>(value: [])
     
     //MARK: - Inputs
-    var reloadDataObserver: AnyObserver<Void>{ reloadDataSubject.asObserver() }
-    var selectMovieObserver: AnyObserver<MovieResults>{ selectMovieSubject.asObserver() }
     var cancelObserver: AnyObserver<Void>{ cancelSubject.asObserver() }
+    var reloadDataObserver: AnyObserver<Void>{ reloadDataSubject.asObserver() }
     var emptyStringObserver: AnyObserver<Void>{ emptyStringSubject.asObserver() }
+    var selectMovieObserver: AnyObserver<MovieResults>{ selectMovieSubject.asObserver() }
     var searchInputTextObserver: AnyObserver<String?>{ searchInputTextSubject.asObserver() }
     var onTapSearchButtonObserver: AnyObserver<Void>{ onTapSearchButtonSubject.asObserver() }
+    
     //MARK: - Outputs
-    var error: Observable<String> { errorSubject.asObservable() }
     var cancel: Observable<Void>{ cancelSubject.asObservable() }
+    var error: Observable<String> { errorSubject.asObservable() }
+    var reloadMovieData: Observable<Void>{ reloadDataSubject.asObservable() }
     var selectMovie: Observable<MovieResults>{ selectMovieSubject.asObservable() }
     var loadNextPageObserver: AnyObserver<Void>{ loadNextPageSubject.asObserver() }
-    var reloadMovieData: Observable<Void>{ reloadDataSubject.asObservable() }
     var dataSource: Observable<[SectionModel<Int, ReusableTableViewCellViewModelType>]> { return dataSourceSubject.asObservable() }
     
     //MARK: - Constructor/init

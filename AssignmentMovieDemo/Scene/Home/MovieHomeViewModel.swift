@@ -43,13 +43,13 @@ class MovieHomeViewModel: MovieHomeViewModelType, MovieHomeViewModelInputs, Movi
     var outputs: MovieHomeViewModelOutputs { return self }
     
     //MARK: - Subjects
-   private let errorSubject = PublishSubject<String>()
-   private let loadNextPageSubject = PublishSubject<Void>()
-   private let actionSearchMoviesSubject = PublishSubject<Void>()
-   private let actionFavouriteMoviesSubject = PublishSubject<Void>()
-   private let moviesSubject = BehaviorSubject<[MovieResults]?>(value: nil)
-   private let dataSourceSubject = BehaviorSubject<[SectionModel<Int, ReusableCollectionViewCellViewModelType>]>(value: [])
-   private let isFavouriteMovieRemoveSubject = PublishSubject<Void>()
+    private let errorSubject = PublishSubject<String>()
+    private let loadNextPageSubject = PublishSubject<Void>()
+    private let actionSearchMoviesSubject = PublishSubject<Void>()
+    private let actionFavouriteMoviesSubject = PublishSubject<Void>()
+    private let moviesSubject = BehaviorSubject<[MovieResults]?>(value: nil)
+    private let dataSourceSubject = BehaviorSubject<[SectionModel<Int, ReusableCollectionViewCellViewModelType>]>(value: [])
+    private let isFavouriteMovieRemoveSubject = PublishSubject<Void>()
     private let selectMovieSubject = PublishSubject<MovieResults>()
     
     //MARK: - Inputs
@@ -83,33 +83,33 @@ class MovieHomeViewModel: MovieHomeViewModelType, MovieHomeViewModelInputs, Movi
 private extension MovieHomeViewModel {
     
     func makeCellViewModels() {
-    
-        let cellViewModels = moviesSubject.unwrap().delay(.nanoseconds(1000), scheduler: MainScheduler.asyncInstance)
+        
+        let cellViewModels = moviesSubject.unwrap().observe(on: ConcurrentDispatchQueueScheduler.init(qos: .default, leeway: .seconds(2)))
             .map{ [unowned self] moviesList -> [ReusableCollectionViewCellViewModelType] in
                 
-            let viewModels = moviesList.map { [unowned self] movieList -> ReusableCollectionViewCellViewModelType in
-                let viewModel = MovieCollectionViewCellViewModel(movieResult: movieList)
-                
-                viewModel.outputs.storeFavourite.subscribe(onNext:{[weak self] movie in
-                    self?.storeDataManager.storeFavouriteMovie(movie: movie)
-                }).disposed(by: disposeBag)
-                
-                if let movies = storeDataManager.fetchFavouriteMovie() {
-                    let isFavourite = movies.filter{ $0.id == viewModel.movieResult.id }.first.map{ _ in true  }
-                    viewModel.inputs.isFavouriteIconObserver.onNext(isFavourite ?? false)
+                let viewModels = moviesList.map { [unowned self] movieList -> ReusableCollectionViewCellViewModelType in
+                    let viewModel = MovieCollectionViewCellViewModel(movieResult: movieList)
+                    
+                    viewModel.outputs.storeFavourite.subscribe(onNext:{[weak self] movie in
+                        self?.storeDataManager.storeFavouriteMovie(movie: movie)
+                    }).disposed(by: disposeBag)
+                    
+                    if let movies = storeDataManager.fetchFavouriteMovie() {
+                        let isFavourite = movies.filter{ $0.id == viewModel.movieResult.id }.first.map{ _ in true  }
+                        viewModel.inputs.isFavouriteIconObserver.onNext(isFavourite ?? false)
+                    }
+                    
+                    return viewModel
                 }
-                
-                return viewModel
+                return viewModels
             }
-            return viewModels
-        }
         
         cellViewModels
             .map { [SectionModel(model: 1, items: $0)]}
             .bind(to: dataSourceSubject)
             .disposed(by: disposeBag)
-            
     }
+    
     
     func requestSubjectInit() {
         //data

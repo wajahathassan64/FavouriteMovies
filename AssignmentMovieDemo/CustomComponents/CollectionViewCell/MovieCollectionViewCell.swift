@@ -83,7 +83,6 @@ class MovieCollectionViewCell: RxUICollectionViewCell {
     
     @objc
     func favouriteIconTap(tapGestureRecognizer: UITapGestureRecognizer) {
-        print("favouriteIconTap")
         favouriteIcon.tintColor = .systemPink
         viewModel.inputs.favouriteIconTapObserver.onNext(())
     }
@@ -115,9 +114,9 @@ private extension MovieCollectionViewCell {
             .alignEdgesWithSuperview([.left, .right, .top, .bottom])
         
         favouriteIcon
-            .height(constant: 22)
-            .width(constant: 24)
-            .alignEdges([.bottom,. right], withView: posterImageView, constants: [8, 12])
+            .height(constant: 24)
+            .width(constant: 26)
+            .alignEdges([.bottom,. right], withView: posterImageView, constants: [6, 6])
         
     }
     

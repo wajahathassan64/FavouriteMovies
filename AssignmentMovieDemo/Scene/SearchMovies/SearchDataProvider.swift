@@ -10,23 +10,25 @@ class SearchDataProvider: SearchDataProviderType {
     
     //MARK: - Properties
     
-    private var repository: MovieDemoRepository
-    private let disposeBag = DisposeBag()
-    private var currentPage: Int
     private var totalPages: Int
+    private var currentPage: Int
+    private let disposeBag = DisposeBag()
+    private var repository: MovieDemoRepository
     private var errorSubject = PublishSubject<String>()
     private var moviesListContainer: [MovieResults] = []
     private var moviesSubject = BehaviorSubject<[MovieResults]?>(value: nil)
-    var error: Observable<String>{ errorSubject.asObservable() }
-    var result: Observable<[MovieResults]?> { return moviesSubject.asObservable() }
+    
+    var searchQuery: String
     let fetchSubject = PublishSubject<Void>()
-    var searchMovieSubject = BehaviorSubject<String?>(value: nil)
-    var searchQuery = ""
-    var refreshDataSourceSubject = PublishSubject<Void>()
     var resetDataSourceSubject = PublishSubject<Void>()
+    var refreshDataSourceSubject = PublishSubject<Void>()
+    var error: Observable<String>{ errorSubject.asObservable() }
+    var searchMovieSubject = BehaviorSubject<String?>(value: nil)
+    var result: Observable<[MovieResults]?> { return moviesSubject.asObservable() }
     
     init(repository: MovieDemoRepository) {
         self.repository = repository
+        searchQuery = ""
         currentPage = 0
         totalPages = 1
         searchMovies()

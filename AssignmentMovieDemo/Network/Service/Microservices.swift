@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class ServiceInstance {
+public class Microservices {
     lazy var movieService: MovieService = {
         return MovieService()
     }()

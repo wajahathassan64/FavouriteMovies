@@ -131,14 +131,12 @@ fileprivate extension SearchMoviesViewController {
 fileprivate extension SearchMoviesViewController {
     func bind() {
         
-        searchBar.rx.text.bind(to: viewModel.inputs.searchInputTextObserver).disposed(by: disposeBag)
         cancelButton.rx.tap
             .do(onNext: { [weak self] in self?.view.endEditing(true) })
             .bind(to: viewModel.inputs.cancelObserver)
             .disposed(by: disposeBag)
-        
+        searchBar.rx.text.bind(to: viewModel.inputs.searchInputTextObserver).disposed(by: disposeBag)
         viewModel.outputs.error.bind(to: rx.showErrorMessage).disposed(by: disposeBag)
-        
         searchBar.rx.search.bind(to: viewModel.inputs.onTapSearchButtonObserver).disposed(by: disposeBag)
         searchBar.editingDidEnd.bind(to: viewModel.inputs.emptyStringObserver).disposed(by: disposeBag)
         
@@ -150,7 +148,9 @@ fileprivate extension SearchMoviesViewController {
             cell.configure(with: viewModel)
             return cell
         })
+        
         viewModel.outputs.dataSource.bind(to: tableView.rx.items(dataSource: dataSource)).disposed(by: disposeBag)
+        
         tableView.rx.reachedBottom().bind(to: viewModel.inputs.loadNextPageObserver).disposed(by: disposeBag)
         
         tableView.rx
