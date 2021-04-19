@@ -93,8 +93,10 @@ class MovieDetailsViewController: UIViewController {
     }()
     
     // MARK: - Properties
-    let viewModel: MovieDetailsViewModelType
     let disposeBag: DisposeBag
+    let viewModel: MovieDetailsViewModelType
+    var posterImageViewLeadingContraint: NSLayoutConstraint!
+    var favIconContraint: NSLayoutConstraint!
     
     
     // MARK: - View Life Cycle
@@ -127,6 +129,18 @@ class MovieDetailsViewController: UIViewController {
     override func onTapBackButton() {
         viewModel.inputs.backObserver.onNext(())
     }
+    
+    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+        coordinator.animate(alongsideTransition: { context in
+            if UIDevice.current.orientation.isLandscape {
+                self.posterImageViewLeadingContraint.constant = 45
+                self.favIconContraint.constant = 22
+            } else {
+                self.posterImageViewLeadingContraint.constant = 10
+                self.favIconContraint.constant = 12
+            }
+        })
+    }
 }
 
 // MARK: - Setup
@@ -157,10 +171,16 @@ fileprivate extension MovieDetailsViewController {
             .alignEdgesWithSuperview([.left, .right])
             .height(constant: 80)
         
+        
+        posterImageViewLeadingContraint = posterImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10)
+        
+        let posterImageConstraints = [
+            posterImageViewLeadingContraint!,
+            posterImageView.heightAnchor.constraint(equalToConstant: 60),
+            posterImageView.widthAnchor.constraint(equalToConstant: 60),
+        ]
+        
         posterImageView
-            .alignEdgesWithSuperview([.left], constant: 10)
-            .width(constant: 60)
-            .height(constant: 60)
             .centerVerticallyInSuperview()
         
         movieName
@@ -174,16 +194,18 @@ fileprivate extension MovieDetailsViewController {
             .alignEdgeWithSuperview(.right, constant: 10)
             .alignEdgeWithSuperview(.bottom, .greaterThanOrEqualTo , constant: 6)
         
+        favIconContraint = view.trailingAnchor.constraint(equalTo: favouriteIcon.trailingAnchor, constant: 12)
+        
         favouriteIcon
             .height(constant: 22)
             .width(constant: 24)
-            .alignEdges([.bottom,. right], withView: containerView, constants: [8, 12])
+            .alignEdges([.bottom], withView: containerView, constants: [8])
         
         overviewTextView
             .topToBottom(bannerImageView)
             .alignEdgesWithSuperview([.left, .right , .safeAreaBottom])
         
-        
+        NSLayoutConstraint.activate(posterImageConstraints + [favIconContraint])
     }
 }
 
