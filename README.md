@@ -55,8 +55,8 @@
 ## Dark Theme Screens ##
 
 <p align="center">
-<img src="https://github.com/wajahathassan64/FavouriteMovies/blob/master/AssignmentMovieDemo/Images/IMG_9487.PNG" width="200" height="600" title="
-">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://github.com/wajahathassan64/FavouriteMovies/blob/master/AssignmentMovieDemo/Images/IMG_9489.PNG" width="200" title="Artist Albums">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://github.com/wajahathassan64/FavouriteMovies/blob/master/AssignmentMovieDemo/Images/IMG_9490.PNG" width="200" title="Album detail">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://github.com/wajahathassan64/FavouriteMovies/blob/master/AssignmentMovieDemo/Images/IMG_9492.PNG" width="200"></p>
+<img src="https://github.com/wajahathassan64/FavouriteMovies/blob/master/AssignmentMovieDemo/Images/IMG_9487.PNG" width="200" height="450" title="
+">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://github.com/wajahathassan64/FavouriteMovies/blob/master/AssignmentMovieDemo/Images/IMG_9489.PNG" width="200" height="450" title="Artist Albums">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://github.com/wajahathassan64/FavouriteMovies/blob/master/AssignmentMovieDemo/Images/IMG_9490.PNG" width="200" height="450"  title="Album detail">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://github.com/wajahathassan64/FavouriteMovies/blob/master/AssignmentMovieDemo/Images/IMG_9492.PNG" height="450"  width="200"></p>
 
 ## Author
 
