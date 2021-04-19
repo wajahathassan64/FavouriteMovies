@@ -26,6 +26,12 @@
 <li> pod 'WHCustomizeConstraint'</li>
 </ul>
 
+## Limitation
+
+<ul>
+<li>Due to heavy data loading after 600 application may slows down or even it may crashes.</li>
+</ul>
+
 ## Author
 
 wajahathassan64, wajahathassan64@gmail.com
