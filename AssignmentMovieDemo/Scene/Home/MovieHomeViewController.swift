@@ -104,7 +104,7 @@ fileprivate extension MovieHomeViewController {
         
         viewModel.outputs.dataSource.bind(to: collectionView.rx.items(dataSource: dataSource)).disposed(by: disposeBag)
         
-        collectionView.rx.reachedBottom(offset: 100).bind(to: viewModel.inputs.loadNextPageObserver).disposed(by: disposeBag)
+//        collectionView.rx.reachedBottom(offset: 100).bind(to: viewModel.inputs.loadNextPageObserver).disposed(by: disposeBag)
         
         collectionView.rx
             .modelSelected(MovieCollectionViewCellViewModel.self)
@@ -136,6 +136,14 @@ extension MovieHomeViewController: UICollectionViewDelegate, UICollectionViewDel
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 10
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        let bottomEdge = Float(scrollView.contentOffset.y + scrollView.frame.size.height)
+        if CGFloat(bottomEdge + 10000) >= collectionView.collectionViewLayout.collectionViewContentSize.height {
+            viewModel.inputs.loadNextPageObserver.onNext(())
+        }
+        
     }
     
 }
