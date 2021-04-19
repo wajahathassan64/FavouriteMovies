@@ -35,7 +35,7 @@
 
 ### 🎧  Dark Theme Screens ###
 <p align="center">
-<img src="https://www.dropbox.com/s/o4n9xiqmwyvjlei/IMG_9487.PNG?dl=0" width="200" title="
+<img src="https://www.dropbox.com/s/o4n9xiqmwyvjlei/IMG_9487.PNG" width="200" title="
 ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://www.dropbox.com/s/o4n9xiqmwyvjlei/IMG_9487.PNG?dl=0" width="200" title="Artist Albums">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://github.com/jwd-ali/TidalTestProject/blob/master/images/iPhone%20darkMode/Screenshot%202019-12-04%20at%2011.28.18%20PM.png" width="200" title="Album detail">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://github.com/jwd-ali/TidalTestProject/blob/master/images/iPhone%20darkMode/Screenshot%202019-12-05%20at%2012.22.30%20AM.png" width="200" title=“Music Playing”></p>
 
 
