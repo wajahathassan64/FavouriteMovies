@@ -13,6 +13,9 @@
 <li>Remove favourite movies.</li>
 <li>Favourite movies list using tableView.</li>
 <li>Movies in grid supports pagination.</li>
+<li>Live search.</li>
+<li>Search history.</li>
+<li>Movie details.</li>
 </ul>
 
 ## Pods used in this project
@@ -35,6 +38,12 @@
 <li>Repository</li>
 <li>Microservices</li>
 <li>Strategy</li>
+</ul>
+
+## User guide (Smart Search)
+
+<ul>
+<li>Search history will only store in db when data in search list available and search only persists by pressing search button from the keyboard.</li>
 </ul>
 
 ## Limitation
