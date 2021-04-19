@@ -47,12 +47,6 @@
 <li>Search history will only store in db when data in search list available and search only persists by pressing search button from the keyboard.</li>
 </ul>
 
-## Limitation
-
-<ul>
-<li>Due to heavy data loading after 600 "Movie Data Objects" application may slow down or even it may crash.</li>
-</ul>
-
 ## Dark Theme Screens ##
 
 
