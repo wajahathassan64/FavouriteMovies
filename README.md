@@ -16,6 +16,7 @@
 <li>Live search.</li>
 <li>Search history.</li>
 <li>Movie details.</li>
+ <li>Both orientation supported.</li>
 </ul>
 
 ## Pods used in this project
