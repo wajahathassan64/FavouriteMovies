@@ -26,10 +26,17 @@
 <li> pod 'WHCustomizeConstraint'</li>
 </ul>
 
+## Design Patterns - Architectural and Non Architectural
+
+<ul>
+<li>MVVM - C</li>
+<li>Factory</li>
+<li>Coordinator</li>
+<li>Repository</li>
+<li>Microservices</li>
+<li>Strategy</li>
+</ul>
+
 ## Author
 
 wajahathassan64, wajahathassan64@gmail.com
-
-## License
-
-WHCustomizeConstraint is available under the MIT license. See the LICENSE file for more info.
