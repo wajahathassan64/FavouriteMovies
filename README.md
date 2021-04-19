@@ -13,6 +13,9 @@
 <li>Remove favourite movies.</li>
 <li>Favourite movies list using tableView.</li>
 <li>Movies in grid supports pagination.</li>
+<li>Live search.</li>
+<li>Search history.</li>
+<li>Movie details.</li>
 </ul>
 
 ## Pods used in this project
@@ -37,11 +40,23 @@
 <li>Strategy</li>
 </ul>
 
+## User guide (Smart Search)
+
+<ul>
+<li>Search history will only store in db when data in search list available and search only persists by pressing search button from the keyboard.</li>
+</ul>
+
 ## Limitation
 
 <ul>
 <li>Due to heavy data loading after 600 "Movie Data Objects" application may slow down or even it may crash.</li>
 </ul>
+
+### 🎧  Dark Theme Screens ###
+
+<p align="center">
+<img src="https://github.com/jwd-ali/TidalTestProject/blob/master/images/IMG_9487.PNG" width="200" title="
+">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://www.dropbox.com/s/o4n9xiqmwyvjlei/IMG_9487.PNG?dl=0" width="200" title="Artist Albums">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://github.com/jwd-ali/TidalTestProject/blob/master/images/iPhone%20darkMode/Screenshot%202019-12-04%20at%2011.28.18%20PM.png" width="200" title="Album detail">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://github.com/jwd-ali/TidalTestProject/blob/master/images/iPhone%20darkMode/Screenshot%202019-12-05%20at%2012.22.30%20AM.png" width="200" title=“Music Playing”></p>
 
 ## Author
 
