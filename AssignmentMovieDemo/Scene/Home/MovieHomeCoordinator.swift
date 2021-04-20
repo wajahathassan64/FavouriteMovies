@@ -24,7 +24,7 @@ class MovieHomeCoordinator: Coordinator<ResultType<ResultType<Void>>> {
     
     override func start() -> Observable<ResultType<ResultType<Void>>> {
         
-        let viewModel = MovieHomeViewModel(storeDataManager: FavouriteMoviesDataManager(storage: userDefaultsHelper), movieDataProvider: movieDataProvider )
+        let viewModel = MovieHomeViewModel(storeDataManager: FavouriteMoviesDataManager(storage: userDefaultsHelper), pageableDataType: movieDataProvider )
         let viewController = MovieHomeViewController(viewModel: viewModel)
         root = UINavigationController(rootViewController: viewController)
         root.navigationBar.barStyle = UIBarStyle.black

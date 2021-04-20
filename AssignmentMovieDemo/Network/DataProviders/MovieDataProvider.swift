@@ -8,25 +8,11 @@
 import Foundation
 import RxSwift
 
-class MovieDataProvider: MovieDataProviderType {
+class MovieDataProvider: SearchDataProvider, MovieDataProviderType {
     
-    private var currentPage: Int
-    private var totalPages: Int
-    private let disposeBag = DisposeBag()
-    private var repository: MovieDemoRepository
-    private var moviesListContainer: [MovieResults] = []
-    private var moviesSubject: BehaviorSubject<[MovieResults]?>
-    private var errorSubject: PublishSubject<String>
-    var result: Observable<[MovieResults]?> { return moviesSubject.asObservable() }
-    var error: Observable<String>{ errorSubject.asObservable() }
-    let fetchSubject = PublishSubject<Void>()
-    
-    init(repository: MovieDemoRepository) {
-        self.repository = repository
-        moviesSubject = BehaviorSubject(value: nil)
-        errorSubject = PublishSubject()
-        currentPage = 0
-        totalPages = 1
+    //MARK: - Constructor
+    override init(repository: MovieDemoRepository) {
+        super.init(repository: repository)
         fetchMovies()
     }
     
@@ -44,10 +30,6 @@ class MovieDataProvider: MovieDataProviderType {
             }.bind(to: moviesSubject).disposed(by: disposeBag)
         
         request.errors().map{ $0.localizedDescription }.bind(to: errorSubject).disposed(by: disposeBag)
-    }
-    
-    func isLastPage() -> Bool {
-        return currentPage == totalPages
     }
     
 }

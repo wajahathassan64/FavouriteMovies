@@ -8,11 +8,11 @@
 import Foundation
 import RxSwift
 
-
 protocol SearchInputType {
     var searchMovieSubject: BehaviorSubject<String?>{ get }
     var resetDataSourceSubject: PublishSubject<Void>{ get }
     var refreshDataSourceSubject: PublishSubject<Void>{ get }
 }
 
-protocol SearchDataProviderType: MovieDataProviderType & SearchInputType { }
+protocol SearchDataProviderType: PageableDataType & SearchInputType { }
+

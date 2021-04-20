@@ -36,7 +36,7 @@ class MovieHomeViewModel: MovieHomeViewModelType, MovieHomeViewModelInputs, Movi
     
     //MARK: - Properties
     let storeDataManager: FavouriteMoviesDataManagerType
-    let movieDataProvider: MovieDataProviderType
+    let pageableDataType: PageableDataType
     let disposeBag = DisposeBag()
     
     var inputs: MovieHomeViewModelInputs { return self }
@@ -69,9 +69,9 @@ class MovieHomeViewModel: MovieHomeViewModelType, MovieHomeViewModelInputs, Movi
     var selectMovie: Observable<MovieResults>{ selectMovieSubject.asObservable() }
     
     //MARK: - Constructor/init
-    init(storeDataManager: FavouriteMoviesDataManagerType, movieDataProvider: MovieDataProviderType) {
+    init(storeDataManager: FavouriteMoviesDataManagerType, pageableDataType: PageableDataType) {
         self.storeDataManager = storeDataManager
-        self.movieDataProvider = movieDataProvider
+        self.pageableDataType = pageableDataType
         makeCellViewModels()
         requestSubjectInit()
         storeDataManagerObserver()
@@ -113,13 +113,13 @@ private extension MovieHomeViewModel {
     
     func requestSubjectInit() {
         //data
-        movieDataProvider.result.bind(to: moviesSubject).disposed(by: disposeBag)
+        pageableDataType.result.bind(to: moviesSubject).disposed(by: disposeBag)
         //error
-        movieDataProvider.error.bind(to: errorSubject).disposed(by: disposeBag)
+        pageableDataType.error.bind(to: errorSubject).disposed(by: disposeBag)
         //load next
         loadNextPageSubject.subscribe(onNext: {[unowned self] _ in
-            guard !self.movieDataProvider.isLastPage() else { return }
-            self.movieDataProvider.fetchSubject.onNext(())
+            guard !self.pageableDataType.isLastPage() else { return }
+            self.pageableDataType.fetchSubject.onNext(())
         }).disposed(by: disposeBag)
     }
     

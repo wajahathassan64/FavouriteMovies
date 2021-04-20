@@ -9,14 +9,13 @@ import RxSwift
 class SearchDataProvider: SearchDataProviderType {
     
     //MARK: - Properties
-    
-    private var totalPages: Int
-    private var currentPage: Int
-    private let disposeBag = DisposeBag()
-    private var repository: MovieDemoRepository
-    private var errorSubject = PublishSubject<String>()
-    private var moviesListContainer: [MovieResults] = []
-    private var moviesSubject = BehaviorSubject<[MovieResults]?>(value: nil)
+    internal var totalPages: Int
+    internal var currentPage: Int
+    internal let disposeBag = DisposeBag()
+    internal var repository: MovieDemoRepository
+    internal var errorSubject = PublishSubject<String>()
+    internal var moviesListContainer: [MovieResults] = []
+    internal var moviesSubject = BehaviorSubject<[MovieResults]?>(value: nil)
     
     var searchQuery: String
     let fetchSubject = PublishSubject<Void>()
@@ -26,6 +25,7 @@ class SearchDataProvider: SearchDataProviderType {
     var searchMovieSubject = BehaviorSubject<String?>(value: nil)
     var result: Observable<[MovieResults]?> { return moviesSubject.asObservable() }
     
+    //MARK: - Constructor
     init(repository: MovieDemoRepository) {
         self.repository = repository
         searchQuery = ""
@@ -36,7 +36,7 @@ class SearchDataProvider: SearchDataProviderType {
         refreshDataSource()
     }
     
-    func searchMovies() {
+    private func searchMovies() {
         
         let request =  Observable.combineLatest(fetchSubject, searchMovieSubject)
             .map{ $0.1 }
