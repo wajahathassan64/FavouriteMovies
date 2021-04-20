@@ -47,18 +47,12 @@
 <li>Search history will only store in db when data in search list available and search only persists by pressing search button from the keyboard.</li>
 </ul>
 
-## Limitation
-
-<ul>
-<li>Due to heavy data loading after 600 "Movie Data Objects" application may slow down or even it may crash.</li>
-</ul>
-
 ## Dark Theme Screens ##
 
 
 <p align="left">
-<img src="https://github.com/wajahathassan64/FavouriteMovies/blob/master/AssignmentMovieDemo/Images/IMG_9487.PNG" width="230" height="430" title="
-">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://github.com/wajahathassan64/FavouriteMovies/blob/master/AssignmentMovieDemo/Images/IMG_9489.PNG" width="230" height="430" title="Artist Albums">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://github.com/wajahathassan64/FavouriteMovies/blob/master/AssignmentMovieDemo/Images/IMG_9490.PNG" width="230" height="430"  title="Album detail">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://github.com/wajahathassan64/FavouriteMovies/blob/master/AssignmentMovieDemo/Images/IMG_9492.PNG" height="430"  width="230"></p>
+<img src="https://github.com/wajahathassan64/FavouriteMovies/blob/master/AssignmentMovieDemo/Images/IMG_9487.PNG" width="230" title="
+">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://github.com/wajahathassan64/FavouriteMovies/blob/master/AssignmentMovieDemo/Images/IMG_9489.PNG" width="230" title="Artist Albums">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://github.com/wajahathassan64/FavouriteMovies/blob/master/AssignmentMovieDemo/Images/IMG_9490.PNG" width="230" title="Album detail">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://github.com/wajahathassan64/FavouriteMovies/blob/master/AssignmentMovieDemo/Images/IMG_9492.PNG"  width="230">;<img src="https://github.com/wajahathassan64/FavouriteMovies/blob/master/AssignmentMovieDemo/Images/IMG_9491.PNG"  width="230"</p>
 
 ## Author
 
