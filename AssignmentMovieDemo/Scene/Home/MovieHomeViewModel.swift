@@ -84,7 +84,7 @@ private extension MovieHomeViewModel {
     
     func makeCellViewModels() {
         
-        let cellViewModels = moviesSubject.unwrap().observe(on: MainScheduler.asyncInstance)
+        let cellViewModels = moviesSubject.unwrap().observe(on: ConcurrentDispatchQueueScheduler.init(qos: .userInteractive))
             .map{ [unowned self] moviesList -> [ReusableCollectionViewCellViewModelType] in
                 
                 let viewModels = moviesList.map { [unowned self] movieList -> ReusableCollectionViewCellViewModelType in

@@ -30,11 +30,11 @@ struct MovieResults: Codable, Equatable {
     
     private var posterImageUrl: String? {
         guard let path = posterPath else { return nil}
-        return "https://image.tmdb.org/t/p/w92" + path /*92, 154, 185, 342, 500, 780*/
+        return "https://image.tmdb.org/t/p/w342" + path /*92, 154, 185, 342, 500, 780*/
     }
     
     var posterImageWithUrl: ImageWithURL {
-        return (posterImageUrl, title.initialsImage(color: UIColor.randomColor()))
+        return (posterImageUrl, nil)// you can pass some placeholder image instead of nil
     }
     
     private var bannerImageUrl: String? {
@@ -43,7 +43,7 @@ struct MovieResults: Codable, Equatable {
     }
     
     var bannerImageWithUrl: ImageWithURL {
-        return (bannerImageUrl, title.initialsImage(color: UIColor.randomColor()))
+        return (bannerImageUrl, nil) // you can pass some placeholder image instead of nil
     }
     
     var formattedReleaseDate: String {

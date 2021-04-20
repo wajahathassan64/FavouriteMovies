@@ -75,6 +75,6 @@ extension MovieTableViewCellViewModel {
     }
     
     var posterImageWithUrl: ImageWithURL {
-        return (posterImageUrl, movieResult.title.initialsImage(color: UIColor.randomColor()))
+        return (posterImageUrl, nil)
     }
 }

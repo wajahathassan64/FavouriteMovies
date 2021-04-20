@@ -88,7 +88,8 @@ class SearchMoviesViewModel: SearchMoviesViewModelType, SearchMoviesViewModelInp
 
 private extension SearchMoviesViewModel {
     func makeCellViewModels() {
-        let cellViewModels = moviesSubject.unwrap().delay(.nanoseconds(100), scheduler: MainScheduler.instance)
+        let cellViewModels = moviesSubject.unwrap()
+            .observe(on: ConcurrentDispatchQueueScheduler.init(qos: .userInitiated))
             .map{ moviesList -> [ReusableTableViewCellViewModelType] in
                 
                 let viewModels = moviesList.map { [unowned self] movieList -> ReusableTableViewCellViewModelType in
@@ -110,7 +111,7 @@ private extension SearchMoviesViewModel {
             }
         
         let noResults = moviesSubject
-            .delay(.nanoseconds(100), scheduler: MainScheduler.instance)
+            .observe(on: ConcurrentDispatchQueueScheduler.init(qos: .userInitiated))
             .filter { $0?.count == 0 }
             .map{ moviesList -> [ReusableTableViewCellViewModelType] in
                 let viewModels = moviesList.map { _ -> [ReusableTableViewCellViewModelType] in
@@ -120,7 +121,7 @@ private extension SearchMoviesViewModel {
             }
         
         let searchHistory = searchResultsSubject
-            .delay(.nanoseconds(100), scheduler: MainScheduler.instance)
+            .observe(on: ConcurrentDispatchQueueScheduler.init(qos: .userInitiated))
             .map{ results -> [ReusableTableViewCellViewModelType] in
                 let viewModels = results.map { results -> [ReusableTableViewCellViewModelType] in
                     var viewModel = [ReusableTableViewCellViewModelType]()
