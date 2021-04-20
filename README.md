@@ -9,6 +9,7 @@
 ## Features
 <ul>
 <li>Movies in collection view.</li>
+<li>Smooth loading.</li>
 <li>Store favourite movies.</li>
 <li>Remove favourite movies.</li>
 <li>Favourite movies list using tableView.</li>
