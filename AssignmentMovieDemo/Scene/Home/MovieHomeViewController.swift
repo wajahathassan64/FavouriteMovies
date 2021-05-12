@@ -51,6 +51,11 @@ class MovieHomeViewController: UIViewController {
         
     }
     
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        ImageCashingManager().clearMemory()
+    }
+    
     func setUpNavigationItems() {
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage.init(named: "icon_favourite_empty"), style: .plain, target: self, action: #selector(self.favouriteAction(_:)))
         
